@@ -1,13 +1,14 @@
 /*
  * TEMPOYA Firebase Web App configuration.
- * Copy these public web-app settings from Firebase Console > Project settings > Your apps.
- * These client config values are not service-account secrets. Never place private keys here.
+ * These client config values are intended for use in the website.
+ * Never place service-account private keys or other server secrets here.
  */
 export const firebaseConfig = {
-  apiKey: "PASTE_FIREBASE_WEB_API_KEY",
-  authDomain: "PASTE_PROJECT_ID.firebaseapp.com",
-  projectId: "PASTE_PROJECT_ID",
-  storageBucket: "PASTE_PROJECT_ID.firebasestorage.app",
-  messagingSenderId: "PASTE_MESSAGING_SENDER_ID",
-  appId: "PASTE_FIREBASE_WEB_APP_ID"
+  apiKey: "AIzaSyDlPJIgpByxIXChVbM-gP6Fold0gXHt5TE",
+  authDomain: "tempoya.firebaseapp.com",
+  projectId: "tempoya",
+  storageBucket: "tempoya.firebasestorage.app",
+  messagingSenderId: "703187177651",
+  appId: "1:703187177651:web:6df5ab2557883c931a20c6",
+  measurementId: "G-HPSXF3WNBJ"
 };
