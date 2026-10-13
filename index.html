@@ -162,6 +162,25 @@
   <details><summary>Can users choose a meeting place?</summary><p>The planned service is designed around mutually agreed, suitable public venues. Feature availability will be confirmed at launch.</p></details>
   <details><summary>How can I report a safety concern?</summary><p>Please use local emergency services if you are in immediate danger. Official TEMPOYA support and reporting channels must be published before user onboarding begins.</p></details>
 </section>
+<section class="section" id="account">
+  <p class="eyebrow">ACCOUNT ACCESS</p>
+  <h2>Phone Number Sign-In</h2>
+  <p>Sign in with a phone number and SMS verification code. This feature becomes active only after the Firebase web-app configuration and Phone sign-in settings are completed.</p>
+  <form id="tempoya-phone-form" style="max-width:520px;display:grid;gap:1rem;margin-top:1.5rem">
+    <label for="tempoya-phone">Phone number with country code (e.g. +91…)
+      <input id="tempoya-phone" name="phone" type="tel" autocomplete="tel" placeholder="+91 98765 43210" required style="display:block;width:100%;padding:.85rem;margin-top:.4rem;border-radius:.6rem">
+    </label>
+    <div id="tempoya-recaptcha-container"></div>
+    <button class="button primary" id="tempoya-send-otp" type="submit">Send OTP</button>
+    <label for="tempoya-otp">6-digit OTP
+      <input id="tempoya-otp" name="otp" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" placeholder="Enter SMS code" style="display:block;width:100%;padding:.85rem;margin-top:.4rem;border-radius:.6rem">
+    </label>
+    <button class="button secondary" id="tempoya-verify-otp" type="button">Verify OTP & Sign In</button>
+    <button class="button secondary" id="tempoya-signout" type="button" hidden>Sign Out</button>
+    <p id="tempoya-auth-status" role="status" aria-live="polite">Setup required: Firebase web app configuration is not yet connected.</p>
+  </form>
+</section>
+<script type="module" src="auth.js"></script>
 <section class="download" id="download">
   <p class="eyebrow">IOS & ANDROID</p><h2>Meet Better. Meet Safer.</h2>
   <p>The TEMPOYA mobile app is not yet available for download. Official store links will be added after release.</p>
