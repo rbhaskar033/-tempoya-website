@@ -10,7 +10,7 @@
   <meta property="og:description" content="Discover a more thoughtful way to connect in real life. Adults 18+ only. Mutual consent always required.">
   <meta property="og:image" content="tempoya-website-preview.png">
   <title>TEMPOYA — Real People. Real Connections.</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css">\n  <script src="country-currency-config.js" defer></script>
 </head>
 <body>
 <header class="site-header">
@@ -77,18 +77,74 @@
   </div>
 </section>
 <section class="section" id="pricing">
-  <p class="eyebrow">PLANNED PRICING</p>
-  <h2>Indicative Tariff Options</h2>
-  <p>The amounts below are proposed examples only, not a live offer. Final prices, fees, taxes, cancellation rules and refund terms must be confirmed before any booking or payment feature launches.</p>
-  <div class="pricing-grid">
-    <article class="price-card"><h3>15 Minutes</h3><p>Basic <strong>₹99</strong></p><p>Standard <strong>₹299</strong></p><p>Premium <strong>₹599</strong></p></article>
-    <article class="price-card"><h3>30 Minutes</h3><p>Basic <strong>₹199</strong></p><p>Standard <strong>₹499</strong></p><p>Premium <strong>₹999</strong></p></article>
-    <article class="price-card"><h3>1 Hour</h3><p>Basic <strong>₹299</strong></p><p>Standard <strong>₹699</strong></p><p>Premium <strong>₹1,299</strong></p></article>
-    <article class="price-card"><h3>2 Hours</h3><p>Basic <strong>₹499</strong></p><p>Standard <strong>₹999</strong></p><p>Premium <strong>₹1,799</strong></p></article>
-    <article class="price-card"><h3>3 Hours</h3><p>Basic <strong>₹699</strong></p><p>Standard <strong>₹1,299</strong></p><p>Premium <strong>₹2,299</strong></p></article>
+  <p class="eyebrow">CONFIGURED PRICING PREVIEW</p>
+  <h2>Choose Your Country & Currency</h2>
+  <p>These are configured example prices, not a live payment offer. Local pricing, taxes, refunds, payment-provider availability and legal requirements must be reviewed before charging users.</p>
+  <div class="country-pricing-controls" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0">
+    <label for="tempoya-country">Country
+      <select id="tempoya-country" style="display:block;width:100%;padding:.8rem;margin-top:.4rem;border-radius:.6rem">
+        <option value="">Loading countries…</option>
+      </select>
+    </label>
+    <div aria-live="polite" style="padding:.5rem 0">
+      <p>Country code: <strong id="tempoya-country-code">—</strong></p>
+      <p>Currency code: <strong id="tempoya-currency-code">—</strong></p>
+      <p>Currency symbol: <strong id="tempoya-currency-symbol">—</strong></p>
+      <p>One-time verification fee: <strong id="tempoya-verification-fee">—</strong></p>
+    </div>
   </div>
-  <p class="small-note">Payment never guarantees a meeting, personal access or physical interaction. Do not pay anyone outside a verified, officially launched payment flow.</p>
+  <div class="pricing-grid" id="tempoya-tariff-grid" aria-live="polite"></div>
+  <p class="small-note">Payment never guarantees a meeting, personal access or physical interaction. No payment is collected by this preview.</p>
+  <p class="small-note">Prices are nominal values entered for each currency, not converted exchange-rate equivalents.</p>
 </section>
+<script>
+(function () {
+  function initTempoyaPricing() {
+    var select = document.getElementById('tempoya-country');
+    var grid = document.getElementById('tempoya-tariff-grid');
+    if (!select || !grid || !window.TEMPOYA_COUNTRIES || !window.TEMPOYA_TARIFFS) return;
+    var countries = window.TEMPOYA_COUNTRIES;
+    countries.forEach(function (c) {
+      var option = document.createElement('option');
+      option.value = c.countryCode;
+      option.textContent = c.country + ' (' + c.currencyCode + ')';
+      select.appendChild(option);
+    });
+    function render() {
+      var country = countries.find(function (c) { return c.countryCode === select.value; }) || countries[0];
+      if (!country) return;
+      document.getElementById('tempoya-country-code').textContent = country.countryCode;
+      document.getElementById('tempoya-currency-code').textContent = country.currencyCode;
+      document.getElementById('tempoya-currency-symbol').textContent = country.currencySymbol;
+      document.getElementById('tempoya-verification-fee').textContent = country.currencySymbol + country.verificationFeeAmount + ' (one-time)';
+      grid.replaceChildren();
+      Object.keys(window.TEMPOYA_TARIFFS).forEach(function (tier) {
+        var card = document.createElement('article');
+        card.className = 'price-card';
+        var heading = document.createElement('h3');
+        heading.textContent = tier;
+        card.appendChild(heading);
+        window.TEMPOYA_TARIFFS[tier].forEach(function (item) {
+          var p = document.createElement('p');
+          var label = document.createElement('span');
+          label.textContent = item.duration + ' ';
+          var price = document.createElement('strong');
+          price.textContent = country.currencySymbol + item.amount.toLocaleString('en-US') + ' ' + country.currencyCode;
+          p.appendChild(label);
+          p.appendChild(price);
+          card.appendChild(p);
+        });
+        grid.appendChild(card);
+      });
+    }
+    select.value = 'IN';
+    select.addEventListener('change', render);
+    render();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initTempoyaPricing);
+  else initTempoyaPricing();
+})();
+</script>
 <section class="section global">
   <div>
     <p class="eyebrow">GROWING RESPONSIBLY</p>
