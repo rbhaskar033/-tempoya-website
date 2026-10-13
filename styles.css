@@ -475,3 +475,15 @@ html {
     padding: 12px 16px;
   }
 }
+
+
+/* TEMPOYA phone-auth form mobile layout */
+#tempoya-phone-form input { background: #fff; color: #111; border: 1px solid #aaa; font: inherit; }
+#tempoya-phone-form button { cursor: pointer; border: 0; }
+#tempoya-phone-form button:disabled { opacity: .55; cursor: not-allowed; }
+#tempoya-auth-status { overflow-wrap: anywhere; padding: .75rem; border: 1px solid rgba(255,255,255,.18); border-radius: .6rem; }
+@media (max-width: 600px) {
+  #account { padding-left: 5%; padding-right: 5%; }
+  #tempoya-phone-form { width: 100%; }
+  #tempoya-phone-form button { width: 100%; }
+}
