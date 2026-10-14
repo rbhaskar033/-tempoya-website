@@ -487,3 +487,110 @@ html {
   #tempoya-phone-form { width: 100%; }
   #tempoya-phone-form button { width: 100%; }
 }
+
+
+/* TEMPOYA brand theme — persistent high-contrast controls */
+:root {
+  color-scheme: dark;
+  --tempoya-bg: #0b1020;
+  --tempoya-surface: #141b2e;
+  --tempoya-surface-raised: #1b2540;
+  --tempoya-pink: #f02e8a;
+  --tempoya-pink-hover: #ff4d9f;
+  --tempoya-blue: #2878f0;
+  --tempoya-blue-hover: #438cff;
+  --tempoya-danger: #dc3545;
+  --tempoya-text: #f7f8fc;
+  --tempoya-muted: #c0c7d8;
+  --tempoya-border: #34415e;
+}
+body {
+  background: var(--tempoya-bg);
+  color: var(--tempoya-text);
+}
+.site-header {
+  background: rgba(11, 16, 32, .96);
+  border-bottom-color: var(--tempoya-border);
+}
+.logo, footer b, .eyebrow, .steps span {
+  color: var(--tempoya-pink);
+}
+nav a { color: var(--tempoya-muted); }
+nav a:hover { color: var(--tempoya-pink-hover); }
+.nav-button, .button.primary {
+  background: var(--tempoya-pink);
+  color: #fff !important;
+  border: 1px solid var(--tempoya-pink);
+}
+.nav-button:hover, .button.primary:hover {
+  background: var(--tempoya-pink-hover);
+}
+.button.secondary {
+  border: 2px solid #7f91b6;
+  color: #fff;
+  background: var(--tempoya-surface);
+}
+.features, .steps article, .price-card, .safety-card, details {
+  background: var(--tempoya-surface);
+  border-color: var(--tempoya-border);
+}
+.hero-card {
+  background: var(--tempoya-surface);
+  border-color: var(--tempoya-border);
+}
+.features b, .country-list, .split ul { color: var(--tempoya-text); }
+.hero p:not(.eyebrow):not(.small-note),
+.steps p, .price-card p, .safety-card p,
+.section > p:not(.eyebrow), details p, .download p:not(.eyebrow) {
+  color: var(--tempoya-muted);
+}
+.price-card strong { color: #fff; }
+.global { background: linear-gradient(135deg, #1c2038, #11182b); }
+.download { background: #171b31; }
+.store-button {
+  background: var(--tempoya-surface-raised);
+  border-color: var(--tempoya-border);
+  color: #fff;
+}
+footer { background: #070b16; color: var(--tempoya-muted); }
+a:focus-visible, summary:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 3px solid #ff8ac5;
+  outline-offset: 3px;
+}
+/* Phone OTP actions: obvious colours and readable labels */
+#tempoya-phone-form button {
+  min-height: 48px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 800;
+  color: #fff !important;
+  opacity: 1;
+}
+#tempoya-phone-form #tempoya-send-otp {
+  background: var(--tempoya-pink) !important;
+}
+#tempoya-phone-form #tempoya-verify-otp {
+  background: var(--tempoya-blue) !important;
+}
+#tempoya-phone-form #tempoya-signout {
+  background: #fff !important;
+  color: var(--tempoya-danger) !important;
+  border: 2px solid var(--tempoya-danger) !important;
+}
+#tempoya-phone-form button:disabled {
+  opacity: .62;
+  filter: saturate(.75);
+}
+#tempoya-auth-status {
+  color: var(--tempoya-text);
+  background: var(--tempoya-surface-raised);
+  border: 1px solid #65779c;
+  line-height: 1.5;
+}
+#tempoya-phone-form input {
+  min-height: 46px;
+  border-radius: 9px;
+  border-color: #8392b1;
+}
+#tempoya-phone-form label { color: var(--tempoya-text); }
