@@ -1,0 +1,19 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Each signed-in user may upload/read only their own profile photo.
+    match /profilePhotos/{userId}/{fileName} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.size <= 2 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp)');
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Deny all other objects unless a later feature adds explicit rules.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
