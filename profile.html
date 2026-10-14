@@ -31,7 +31,7 @@ import {getStorage,ref,uploadBytes,getDownloadURL} from "https://www.gstatic.com
 import {firebaseConfig} from "./firebase-config.js";
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),storage=getStorage(app);
 const $=id=>document.getElementById(id),form=$("profile-form"),status=$("status");
-let user=null,photoURL="",busy=false;
+let user=null,photoURL="",busy=false,photoWarning="";
 function say(t,kind=""){status.textContent=t;status.className="account-status"+(kind?" "+kind:"")}
 function lock(v){busy=v;$("save").disabled=v;$("reload").disabled=v;$("signout").disabled=v}
 function userDoc(){if(!user)throw new Error("Please sign in again.");return doc(db,"users",user.uid)}
@@ -39,9 +39,27 @@ function fill(d={}){$("displayName").value=d.displayName||"";$("age").value=d.ag
 async function load(){if(!user)return;lock(true);try{const s=await getDoc(userDoc());fill(s.exists()?s.data():{});say(s.exists()?"Saved profile loaded from Firestore.":"No saved profile yet. Enter your details and tap Save Profile.")}catch(e){console.error(e);say("Could not read Firestore. Check Firestore is enabled and its rules permit this signed-in user to read users/{uid}. Error: "+(e.code||e.message),"error")}finally{lock(false)}}
 $("photo").addEventListener("change",()=>{const f=$("photo").files?.[0];if(!f)return;if(!["image/jpeg","image/png","image/webp"].includes(f.type)||f.size>2*1024*1024){$("photo").value="";say("Choose JPG, PNG or WebP, no larger than 2 MB.","error");return} $("photo-preview").src=URL.createObjectURL(f)});
 form.addEventListener("submit",async e=>{e.preventDefault();if(!user||busy)return;const displayName=$("displayName").value.trim(),age=Number($("age").value),country=$("country").value,preferredLanguage=$("language").value,gender=$("gender").value;if(displayName.length<2||displayName.length>60)return say("Display name must be 2–60 characters.","error");if(!Number.isInteger(age)||age<18||age>120)return say("TEMPOYA is for adults 18+. Enter an age from 18 to 120.","error");if(!country||!preferredLanguage)return say("Choose your country and preferred language.","error");lock(true);say("Saving profile…");
-try{const image=$("photo").files?.[0];if(image){say("Uploading photo to Firebase Storage…");await uploadBytes(ref(storage,"profilePhotos/"+user.uid+"/profile"),image,{contentType:image.type});photoURL=await getDownloadURL(ref(storage,"profilePhotos/"+user.uid+"/profile"))}
-await setDoc(userDoc(),{displayName,age,country,preferredLanguage,gender,photoURL,phoneNumber:user.phoneNumber||null,accountStatus:"active",updatedAt:serverTimestamp()},{merge:true});say("Profile saved to Firestore. Tap Reload Saved Profile to verify it reopens.","success")
-}catch(e){console.error(e);let msg=e.message||"Unknown error";if(e.code==="permission-denied")msg="Firestore security rules denied access. Configure authenticated-owner access for users/{uid}.";if(e.code==="storage/unauthorized")msg="Storage rules denied photo upload. Configure owner-only access for profilePhotos/{uid}/.";if(e.code==="storage/bucket-not-found")msg="Firebase Storage bucket is not ready. Enable Storage and configure its rules. Retry without a photo.";say("Save did not complete: "+(e.code||"") +" "+msg,"error")}finally{lock(false)}});
+try{
+const image=$("photo").files?.[0];
+photoWarning="";
+if(image){
+  say("Uploading photo…");
+  try {
+    await uploadBytes(ref(storage,"profilePhotos/"+user.uid+"/profile"),image,{contentType:image.type});
+    photoURL=await getDownloadURL(ref(storage,"profilePhotos/"+user.uid+"/profile"));
+  } catch(photoError) {
+    console.error("TEMPOYA optional profile photo upload failed",photoError);
+    photoWarning=" Profile details were saved, but the photo was not uploaded. Enable Firebase Storage and publish owner-only Storage rules, then try the photo again.";
+  }
+}
+await setDoc(userDoc(),{displayName,age,country,preferredLanguage,gender,photoURL,phoneNumber:user.phoneNumber||null,accountStatus:"active",updatedAt:serverTimestamp()},{merge:true});
+say("Profile saved to Firestore."+(photoWarning||" Tap Reload Saved Profile to verify it reopens."),photoWarning?"":"success");
+}catch(e){
+ console.error(e);
+ let msg=e.message||"Unknown error";
+ if(e.code==="permission-denied")msg="Firestore security rules denied access. Confirm the owner-only rules are published for users/{uid}.";
+ say("Profile details were not saved: "+(e.code||"")+" "+msg,"error")
+}finally{lock(false)}});
 $("reload").addEventListener("click",load);
 $("signout").addEventListener("click",async()=>{if(!user||busy)return;lock(true);try{await signOut(auth);location.replace("index.html#account")}catch(e){say("Sign out failed: "+(e.code||e.message),"error");lock(false)}});
 onAuthStateChanged(auth,async u=>{user=u;if(!u){form.hidden=true;$("signedout").hidden=false;say("Not signed in. Return to the sign-in page.");return} $("signedout").hidden=true;form.hidden=false;await load()});
