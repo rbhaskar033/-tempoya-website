@@ -1,0 +1,71 @@
+name: TEMPOYA Static Safety Audit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Check required pages and country coverage
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re, sys
+
+          root = Path(".")
+          required = [
+              "index.html", "profile.html", "styles.css", "auth.js",
+              "firebase-config.js", "country-currency-config.js",
+              "privacy-policy.html", "terms.html",
+              "community-guidelines.html", "support.html",
+              "firestore.rules", "storage.rules"
+          ]
+          missing = [p for p in required if not (root / p).is_file()]
+          if missing:
+              print("FAIL: missing required files:", ", ".join(missing))
+              sys.exit(1)
+
+          config = (root / "country-currency-config.js").read_text()
+          codes = re.findall(r'countryCode:"([A-Z]{2})"', config)
+          if len(codes) != 22 or len(set(codes)) != 22:
+              print(f"FAIL: expected 22 unique country codes; found {len(codes)} entries / {len(set(codes))} unique")
+              sys.exit(1)
+
+          profile = (root / "profile.html").read_text()
+          checks = {
+              "profile load": "getDoc(userDoc())" in profile,
+              "profile save": "setDoc(userDoc()" in profile,
+              "reload saved profile": 'addEventListener("click",load)' in profile,
+              "sign out": "signOut(auth)" in profile,
+              "auth state listener": "onAuthStateChanged(auth" in profile,
+              "profile photo upload": "uploadBytes(" in profile,
+          }
+          failed = [name for name, ok in checks.items() if not ok]
+          if failed:
+              print("FAIL: profile implementation checks:", ", ".join(failed))
+              sys.exit(1)
+
+          rules = (root / "firestore.rules").read_text()
+          if "allow read, write: if true" in rules:
+              print("FAIL: public Firestore read/write rule detected")
+              sys.exit(1)
+          if 'request.auth.uid == userId' not in rules:
+              print("FAIL: owner-only Firestore rule not detected")
+              sys.exit(1)
+
+          print("PASS: required pages and rules files exist")
+          print("PASS: 22 unique country codes configured")
+          print("PASS: profile load/save/reload/sign-out/auth-state/photo code present")
+          print("PASS: no obvious public Firestore rule; owner check present")
+          print("NOTE: this is a static audit, not a live Firebase/OTP/payment or browser end-to-end test.")
+          PY
