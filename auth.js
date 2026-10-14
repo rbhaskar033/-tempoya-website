@@ -21,6 +21,7 @@ if (form) {
   let auth = null;
   let busy = false;
   let currentUser = null;
+  let invalidOtpAttempts = 0;
   const cooldownKey = "tempoya_otp_cooldown_until";
   let cooldownUntil = 0;
   let cooldownTimer = null;
@@ -81,8 +82,9 @@ if (form) {
       "auth/unauthorized-domain": "This website domain is not authorized in Firebase Authentication.",
       "auth/billing-not-enabled": "Firebase requires a linked billing account for SMS phone authentication.",
       "auth/quota-exceeded": "Firebase SMS quota reached. Wait or review Firebase billing/quota settings.",
-      "auth/invalid-verification-code": "Incorrect OTP. Check the code and try again.",
-      "auth/code-expired": "That OTP expired. Request a new code."
+      "auth/invalid-verification-code": "This code was not accepted. Use the code from the MOST RECENT TEMPOYA SMS only. If you requested another code, an earlier SMS code may no longer work. Do not request another SMS unless needed.",
+      "auth/code-expired": "This OTP has expired. Wait until the resend timer ends, then request one new code and use that newest SMS.",
+      "auth/session-expired": "This OTP session expired. Wait until the resend timer ends, request one new code, and use the newest SMS."
     };
     return messages[error?.code] || "Could not complete authentication. Check Firebase configuration, domain, SMS region policy and quota, then retry.";
   }
@@ -169,6 +171,7 @@ if (form) {
       await recaptchaVerifier.render();
       const result = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
       confirmationResult = result;
+      invalidOtpAttempts = 0;
       startCooldown(60, "SMS requested.");
       otpInput.value = "";
       say("SMS code requested. Enter the 6-digit code received on your phone, then tap Verify OTP & Sign In.");
@@ -216,7 +219,22 @@ if (form) {
       window.location.assign("profile.html");
     } catch (error) {
       console.error("TEMPOYA OTP verification error", error);
-      say(explainAuthError(error));
+      if (error?.code === "auth/invalid-verification-code") {
+        invalidOtpAttempts += 1;
+        if (invalidOtpAttempts >= 3) {
+          confirmationResult = null;
+          otpInput.value = "";
+          say("Three codes were not accepted. To protect your account, this OTP session was reset. Wait until the resend timer ends, request ONE new SMS, and enter only the newest code.");
+        } else {
+          say(explainAuthError(error) + " Attempts remaining for this code: " + (3 - invalidOtpAttempts) + ".");
+        }
+      } else if (error?.code === "auth/code-expired" || error?.code === "auth/session-expired") {
+        confirmationResult = null;
+        otpInput.value = "";
+        say(explainAuthError(error));
+      } else {
+        say(explainAuthError(error));
+      }
     } finally {
       busy = false;
       updateButtons();
