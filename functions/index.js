@@ -161,7 +161,8 @@ exports.stripeVerificationWebhook = onRequest(
         const p = pSnap.data();
         if (p.status === "paid") return; // Webhook retries are idempotent.
         if (p.attemptId !== attemptId || p.checkoutSessionId !== session.id ||
-            p.uid !== uid || p.purpose !== "account_verification_one_time") {
+            p.uid !== uid || p.purpose !== "account_verification_one_time" ||
+            session.amount_total !== p.amount || String(session.currency || "").toLowerCase() !== p.currency) {
           throw new Error("Payment attempt does not match the active account attempt");
         }
         const u = uSnap.data();
