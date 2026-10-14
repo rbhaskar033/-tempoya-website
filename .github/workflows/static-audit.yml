@@ -56,7 +56,7 @@ jobs:
               sys.exit(1)
 
           rules = (root / "firestore.rules").read_text()
-          if "allow read, write: if true" in rules:
+          if re.search(r"^\\s*allow\\s+read\\s*,\\s*write\\s*:\\s*if\\s+true\\s*;", rules, re.M):
               print("FAIL: public Firestore read/write rule detected")
               sys.exit(1)
           if 'request.auth.uid == userId' not in rules:
