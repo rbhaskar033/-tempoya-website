@@ -1,12 +1,17 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // A signed-in user can read and edit only their own profile document.
-    // Never use an open rule such as allow read, write: if true.
+    function signedIn() { return request.auth != null; }
+    function owner(userId) { return signedIn() && request.auth.uid == userId; }
+    function isMatchMember(matchId) {
+      return signedIn()
+        && exists(/databases/$(database)/documents/matches/$(matchId))
+        && request.auth.uid in get(/databases/$(database)/documents/matches/$(matchId)).data.members;
+    }
+
     match /users/{userId} {
-      allow read: if request.auth != null && request.auth.uid == userId;
-      allow create, update: if request.auth != null
-        && request.auth.uid == userId
+      allow read: if owner(userId);
+      allow create, update: if owner(userId)
         && request.resource.data.displayName is string
         && request.resource.data.displayName.size() >= 2
         && request.resource.data.displayName.size() <= 60
@@ -15,10 +20,95 @@ service cloud.firestore {
         && request.resource.data.age <= 120
         && request.resource.data.country is string
         && request.resource.data.preferredLanguage is string;
-      allow delete: if request.auth != null && request.auth.uid == userId;
+      allow delete: if owner(userId);
     }
 
-    // Deny all other collections unless a later feature adds explicit rules.
+    // Public discovery records expose only a limited profile; the client must never write phone numbers here.
+    match /publicProfiles/{userId} {
+      allow read: if signedIn();
+      allow create, update: if owner(userId)
+        && request.resource.data.keys().hasOnly(['displayName','age','country','preferredLanguage','bio','discoverable','updatedAt'])
+        && request.resource.data.displayName is string
+        && request.resource.data.age is int
+        && request.resource.data.age >= 18
+        && request.resource.data.country is string
+        && request.resource.data.preferredLanguage is string
+        && request.resource.data.bio is string
+        && request.resource.data.bio.size() <= 240
+        && request.resource.data.discoverable is bool;
+      allow delete: if owner(userId);
+    }
+
+    match /likes/{likeId} {
+      allow read: if signedIn() && (resource.data.from == request.auth.uid || resource.data.to == request.auth.uid);
+      allow create: if signedIn()
+        && request.resource.data.from == request.auth.uid
+        && request.resource.data.to is string
+        && request.resource.data.to != request.auth.uid
+        && likeId == request.auth.uid + '_' + request.resource.data.to;
+      allow update, delete: if false;
+    }
+
+    match /matches/{matchId} {
+      allow read: if signedIn() && request.auth.uid in resource.data.members;
+      allow create: if signedIn()
+        && request.auth.uid in request.resource.data.members
+        && request.resource.data.members is list
+        && request.resource.data.members.size() == 2;
+      allow update: if signedIn() && request.auth.uid in resource.data.members
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lastMessageAt']);
+      allow delete: if false;
+
+      match /messages/{messageId} {
+        allow read: if isMatchMember(matchId);
+        allow create: if isMatchMember(matchId)
+          && request.resource.data.senderId == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 1000;
+        allow update, delete: if false;
+      }
+    }
+
+    match /bookings/{bookingId} {
+      allow read: if signedIn() && request.auth.uid in resource.data.members;
+      allow create: if signedIn()
+        && request.auth.uid == request.resource.data.requesterId
+        && request.auth.uid in request.resource.data.members
+        && request.resource.data.members is list
+        && request.resource.data.members.size() == 2
+        && request.resource.data.venue is string
+        && request.resource.data.venue.size() > 0
+        && request.resource.data.durationMinutes in [15,30,60,120,180]
+        && request.resource.data.status == 'requested'
+        && request.resource.data.paymentStatus == 'not_enabled';
+      allow update: if signedIn()
+        && request.auth.uid in resource.data.members
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','updatedAt'])
+        && request.resource.data.status in ['accepted','declined']
+        && request.resource.data.requesterId == resource.data.requesterId;
+      allow delete: if false;
+    }
+
+    match /blocks/{blockId} {
+      allow read: if signedIn() && resource.data.by == request.auth.uid;
+      allow create: if signedIn()
+        && request.resource.data.by == request.auth.uid
+        && request.resource.data.blocked is string
+        && request.resource.data.blocked != request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    match /reports/{reportId} {
+      allow create: if signedIn()
+        && request.resource.data.by == request.auth.uid
+        && request.resource.data.reported is string
+        && request.resource.data.reason is string
+        && request.resource.data.reason.size() <= 500;
+      allow read: if false;
+      allow update, delete: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }
