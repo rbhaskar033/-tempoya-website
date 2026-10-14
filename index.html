@@ -155,6 +155,22 @@
     <div class="country-list">India · USA · Canada · UK · Australia · New Zealand · Singapore · UAE · Saudi Arabia · Qatar · Germany · France · Italy · Spain · Netherlands · Ireland · Japan · South Korea · Malaysia · Thailand · Indonesia · Philippines</div>
   </div>
 </section>
+<section class="section" id="verification-fee">
+  <p class="eyebrow">ONE-TIME ACCOUNT VERIFICATION</p>
+  <h2>Simple, transparent verification fee</h2>
+  <p>Select your country to see the planned one-time account verification charge in local currency. This is a displayed planned fee only; online charging is not enabled until a payment provider, receipts, refunds, and compliance checks are completed.</p>
+  <div style="max-width:520px;margin-top:1rem">
+    <label for="verification-country">Country
+      <select id="verification-country" required style="display:block;width:100%;padding:.85rem;margin-top:.4rem;border-radius:.6rem">
+        <option value="IN">India</option>
+      </select>
+    </label>
+    <div id="verification-fee-display" role="status" aria-live="polite" style="margin-top:1rem;padding:1rem;border:1px solid #cbd2df;border-radius:.75rem">
+      <strong>One-time fee: ₹1</strong>
+      <p>No payment is collected on this preview page.</p>
+    </div>
+  </div>
+</section>
 <section class="section" id="faq">
   <p class="eyebrow">QUESTIONS</p><h2>FAQ</h2>
   <details><summary>Who is TEMPOYA for?</summary><p>TEMPOYA is intended only for adults aged 18 and above.</p></details>
@@ -220,5 +236,15 @@
   <span><a href="privacy-policy.html">Privacy</a> • <a href="terms.html">Terms</a> • <a href="community-guidelines.html">Community Guidelines</a> • <a href="support.html">Support</a></span>
   <span>© 2026 TEMPOYA</span>
 </footer>
+<script>
+(function(){
+ const select=document.getElementById("verification-country"),display=document.getElementById("verification-fee-display");
+ if(!select||!display||!Array.isArray(window.TEMPOYA_COUNTRIES))return;
+ select.innerHTML=window.TEMPOYA_COUNTRIES.map(c=>'<option value="'+c.countryCode+'">'+c.country+'</option>').join("");
+ select.value="IN";
+ function render(){const c=window.TEMPOYA_COUNTRIES.find(x=>x.countryCode===select.value);if(!c)return;display.innerHTML='<strong>One-time fee: '+c.currencySymbol+c.verificationFeeAmount+' '+c.currencyCode+'</strong><p>Account verification charge · one time only</p><p>No payment is collected on this preview page. Final charging depends on payment-provider and local-law readiness.</p>';}
+ select.addEventListener("change",render);render();
+})();
+</script>
 </body>
 </html>
