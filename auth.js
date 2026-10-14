@@ -92,8 +92,8 @@ if (form) {
       say("Firebase setup is not complete.");
       return;
     }
-    const phone = phoneInput.value.trim().replace(/[\\s()-]/g, "");
-    if (!/^\\+[1-9]\\d{7,14}$/.test(phone)) {
+    const phone = phoneInput.value.trim().replace(/[\s()-]/g, "");
+    if (!/^\+[1-9]\d{7,14}$/.test(phone)) {
       say("Enter a valid international phone number including + country code.");
       phoneInput.focus();
       return;
@@ -139,7 +139,7 @@ if (form) {
       return;
     }
     const code = otpInput.value.trim();
-    if (!/^\\d{6}$/.test(code)) {
+    if (!/^\d{6}$/.test(code)) {
       say("Enter all 6 digits from the SMS before signing in.");
       otpInput.focus();
       return;
