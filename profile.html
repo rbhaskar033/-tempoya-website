@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101a33">
+  <title>Your TEMPOYA Account</title>
+  <link rel="stylesheet" href="styles.css?v=20261014d">
+  <style>
+    .account-wrap{max-width:760px;margin:3rem auto;padding:1.25rem}
+    .account-panel{background:#fff;color:#172033;border-radius:1.2rem;padding:clamp(1.25rem,4vw,2.5rem);box-shadow:0 12px 36px rgba(0,0,0,.14)}
+    .account-panel h1{margin-top:0}
+    .account-status{padding:1rem;border-radius:.75rem;background:#e8f5e9;color:#1b5e20;margin:1rem 0}
+    .account-meta{overflow-wrap:anywhere}
+    .account-actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.5rem}
+    .account-note{color:#465064;line-height:1.6}
+  </style>
+</head>
+<body>
+<header class="site-header"><a class="logo" href="index.html">♡ TEMPOYA</a><nav><a href="index.html">Website Home</a></nav></header>
+<main class="account-wrap">
+  <section class="account-panel" aria-labelledby="account-title">
+    <p class="eyebrow">YOUR ACCOUNT</p>
+    <h1 id="account-title">Welcome to TEMPOYA</h1>
+    <div id="account-status" class="account-status" role="status" aria-live="polite">Checking your sign-in…</div>
+    <div id="account-details" hidden>
+      <p><strong>Phone:</strong> <span id="account-phone" class="account-meta">—</span></p>
+      <p><strong>Account ID:</strong> <span id="account-uid" class="account-meta">—</span></p>
+      <p class="account-note">Your phone sign-in is complete. Profile creation, identity checks, matching, booking and payments are not yet enabled on this page. We’ll add and test those steps before treating them as live features.</p>
+      <div class="account-actions">
+        <a class="button secondary" href="index.html">Website Home</a>
+        <button class="button primary" id="account-signout" type="button">Sign Out</button>
+      </div>
+    </div>
+  </section>
+</main>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+  import { firebaseConfig } from "./firebase-config.js";
+  const status = document.getElementById("account-status");
+  const details = document.getElementById("account-details");
+  const phone = document.getElementById("account-phone");
+  const uid = document.getElementById("account-uid");
+  const signOutButton = document.getElementById("account-signout");
+  const auth = getAuth(initializeApp(firebaseConfig));
+  onAuthStateChanged(auth, user => {
+    if (!user) {
+      status.textContent = "You are not signed in. Please return to the website and verify your phone number.";
+      details.hidden = true;
+      window.setTimeout(() => window.location.replace("index.html#download"), 1800);
+      return;
+    }
+    status.textContent = "Phone verified — you are signed in.";
+    phone.textContent = user.phoneNumber || "Verified";
+    uid.textContent = user.uid;
+    details.hidden = false;
+  });
+  signOutButton.addEventListener("click", async () => {
+    signOutButton.disabled = true;
+    try {
+      await signOut(auth);
+      status.textContent = "Signed out. Returning to the website…";
+      window.location.replace("index.html#download");
+    } catch (error) {
+      console.error("TEMPOYA sign-out error", error);
+      status.textContent = "Could not sign out. Please try again.";
+      signOutButton.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
