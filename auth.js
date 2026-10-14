@@ -21,6 +21,10 @@ if (form) {
   let auth = null;
   let busy = false;
   let currentUser = null;
+  const cooldownKey = "tempoya_otp_cooldown_until";
+  let cooldownUntil = 0;
+  let cooldownTimer = null;
+  try { cooldownUntil = Number(localStorage.getItem(cooldownKey) || 0); } catch (_) {}
 
   const configured = Boolean(firebaseConfig &&
     firebaseConfig.apiKey && !String(firebaseConfig.apiKey).includes("PASTE_") &&
@@ -34,8 +38,35 @@ if (form) {
 
   // Only disable Verify while sending/verifying or when there is no active SMS request.
   // Do not disable it merely because the OTP field is still empty; show a clear validation message on tap.
+  function startCooldown(seconds, reason = "") {
+    cooldownUntil = Date.now() + seconds * 1000;
+    try { localStorage.setItem(cooldownKey, String(cooldownUntil)); } catch (_) {}
+    if (cooldownTimer) clearInterval(cooldownTimer);
+    const tick = () => {
+      const left = Math.max(0, Math.ceil((cooldownUntil - Date.now()) / 1000));
+      if (left > 0) {
+        sendButton.textContent = "Wait " + left + "s to resend";
+        sendButton.disabled = true;
+        if (reason) say(reason + " You can request another SMS in " + left + " seconds.");
+      } else {
+        cooldownUntil = 0;
+        try { localStorage.removeItem(cooldownKey); } catch (_) {}
+        clearInterval(cooldownTimer);
+        cooldownTimer = null;
+        sendButton.textContent = "Send OTP";
+        updateButtons();
+        if (reason) say("Wait period ended. If Firebase still blocks requests, wait longer before retrying.");
+      }
+    };
+    tick();
+    cooldownTimer = setInterval(tick, 1000);
+  }
+
   function updateButtons() {
-    sendButton.disabled = busy || !auth;
+    const coolingDown = Date.now() < cooldownUntil;
+    sendButton.disabled = busy || !auth || coolingDown;
+    if (coolingDown) sendButton.textContent = "Wait " + Math.ceil((cooldownUntil - Date.now()) / 1000) + "s to resend";
+    else if (!busy) sendButton.textContent = "Send OTP";
     verifyButton.disabled = busy || !auth || !confirmationResult;
     signOutButton.hidden = !currentUser;
     signOutButton.disabled = busy || !auth || !currentUser;
@@ -43,7 +74,7 @@ if (form) {
 
   function explainAuthError(error) {
     const messages = {
-      "auth/too-many-requests": "Too many attempts. Please wait before trying again.",
+      "auth/too-many-requests": "Firebase temporarily limited SMS requests for security. Repeated attempts cannot be bypassed; wait before retrying.",
       "auth/invalid-phone-number": "That phone number is invalid. Include the + country code.",
       "auth/captcha-check-failed": "Security check failed. Refresh the page and try again.",
       "auth/operation-not-allowed": "Phone sign-in is not enabled in Firebase.",
@@ -92,6 +123,11 @@ if (form) {
       say("Firebase setup is not complete.");
       return;
     }
+    if (Date.now() < cooldownUntil) {
+      say("Please wait " + Math.ceil((cooldownUntil - Date.now()) / 1000) + " seconds before requesting another SMS.");
+      updateButtons();
+      return;
+    }
     const dialCode = document.getElementById("tempoya-country-dial")?.value || "";
     let nationalNumber = phoneInput.value.trim().replace(/[^\d]/g, "");
 
@@ -133,6 +169,7 @@ if (form) {
       await recaptchaVerifier.render();
       const result = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
       confirmationResult = result;
+      startCooldown(60, "SMS requested.");
       otpInput.value = "";
       say("SMS code requested. Enter the 6-digit code received on your phone, then tap Verify OTP & Sign In.");
       updateButtons();
@@ -140,6 +177,8 @@ if (form) {
     } catch (error) {
       console.error("TEMPOYA OTP send error", error);
       confirmationResult = null;
+      if (error?.code === "auth/too-many-requests") startCooldown(300, "Firebase rate limit reached.");
+      else if (error?.code === "auth/quota-exceeded") startCooldown(300, "SMS quota may be exhausted.");
       say(explainAuthError(error));
       if (recaptchaVerifier) {
         recaptchaVerifier.clear();
