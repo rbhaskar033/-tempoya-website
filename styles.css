@@ -489,108 +489,61 @@ html {
 }
 
 
-/* TEMPOYA brand theme — persistent high-contrast controls */
+
+
+/* TEMPOYA brand theme v2026-10-14b */
 :root {
   color-scheme: dark;
-  --tempoya-bg: #0b1020;
-  --tempoya-surface: #141b2e;
-  --tempoya-surface-raised: #1b2540;
+  --tempoya-bg: #101a33;
+  --tempoya-surface: #192744;
+  --tempoya-surface-raised: #243657;
   --tempoya-pink: #f02e8a;
-  --tempoya-pink-hover: #ff4d9f;
-  --tempoya-blue: #2878f0;
-  --tempoya-blue-hover: #438cff;
-  --tempoya-danger: #dc3545;
-  --tempoya-text: #f7f8fc;
-  --tempoya-muted: #c0c7d8;
-  --tempoya-border: #34415e;
+  --tempoya-pink-hover: #ff5aa8;
+  --tempoya-blue: #1769e8;
+  --tempoya-blue-hover: #3986ff;
+  --tempoya-red: #c62838;
+  --tempoya-text: #ffffff;
+  --tempoya-muted: #d0d8e8;
+  --tempoya-border: #52698e;
 }
-body {
-  background: var(--tempoya-bg);
-  color: var(--tempoya-text);
-}
-.site-header {
-  background: rgba(11, 16, 32, .96);
-  border-bottom-color: var(--tempoya-border);
-}
-.logo, footer b, .eyebrow, .steps span {
-  color: var(--tempoya-pink);
-}
+html, body { background: var(--tempoya-bg) !important; color: var(--tempoya-text); }
+.site-header { background: rgba(16, 26, 51, .98) !important; border-bottom: 1px solid var(--tempoya-border); }
+.logo, footer b, .eyebrow, .steps span { color: var(--tempoya-pink) !important; }
 nav a { color: var(--tempoya-muted); }
-nav a:hover { color: var(--tempoya-pink-hover); }
-.nav-button, .button.primary {
-  background: var(--tempoya-pink);
-  color: #fff !important;
-  border: 1px solid var(--tempoya-pink);
-}
-.nav-button:hover, .button.primary:hover {
-  background: var(--tempoya-pink-hover);
-}
-.button.secondary {
-  border: 2px solid #7f91b6;
-  color: #fff;
-  background: var(--tempoya-surface);
-}
-.features, .steps article, .price-card, .safety-card, details {
-  background: var(--tempoya-surface);
-  border-color: var(--tempoya-border);
-}
-.hero-card {
-  background: var(--tempoya-surface);
-  border-color: var(--tempoya-border);
-}
+nav a:hover { color: #ff8fc4; }
+.nav-button, .button.primary { background: var(--tempoya-pink) !important; color: #fff !important; border: 2px solid var(--tempoya-pink) !important; }
+.button.secondary { background: #243657 !important; color: #fff !important; border: 2px solid #86a6da !important; }
+.features, .steps article, .price-card, .safety-card, details, .hero-card { background: var(--tempoya-surface) !important; border-color: var(--tempoya-border) !important; }
+.hero p:not(.eyebrow):not(.small-note), .steps p, .price-card p, .safety-card p, .section > p:not(.eyebrow), details p, .download p:not(.eyebrow) { color: var(--tempoya-muted); }
 .features b, .country-list, .split ul { color: var(--tempoya-text); }
-.hero p:not(.eyebrow):not(.small-note),
-.steps p, .price-card p, .safety-card p,
-.section > p:not(.eyebrow), details p, .download p:not(.eyebrow) {
-  color: var(--tempoya-muted);
-}
-.price-card strong { color: #fff; }
-.global { background: linear-gradient(135deg, #1c2038, #11182b); }
-.download { background: #171b31; }
-.store-button {
-  background: var(--tempoya-surface-raised);
-  border-color: var(--tempoya-border);
-  color: #fff;
-}
-footer { background: #070b16; color: var(--tempoya-muted); }
-a:focus-visible, summary:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
-  outline: 3px solid #ff8ac5;
-  outline-offset: 3px;
-}
-/* Phone OTP actions: obvious colours and readable labels */
+.global { background: linear-gradient(135deg, #253658, #17243e) !important; }
+.download { background: #1b2946 !important; }
+.store-button { background: #243657; border-color: #52698e; color: #fff; }
+footer { background: #0a1225; color: #d0d8e8; }
+a:focus-visible, summary:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #ff8fc4; outline-offset: 3px; }
+/* Explicit, high-contrast OTP buttons */
 #tempoya-phone-form button {
-  min-height: 48px;
-  padding: 12px 18px;
-  border-radius: 10px;
-  font: inherit;
-  font-weight: 800;
-  color: #fff !important;
-  opacity: 1;
+  min-height: 50px !important; padding: 12px 18px !important;
+  border-radius: 12px !important; font: inherit !important;
+  font-weight: 800 !important; opacity: 1 !important; cursor: pointer;
+  text-shadow: none !important; box-shadow: none;
 }
 #tempoya-phone-form #tempoya-send-otp {
-  background: var(--tempoya-pink) !important;
+  background: #f02e8a !important; color: #ffffff !important; border: 2px solid #f02e8a !important;
 }
 #tempoya-phone-form #tempoya-verify-otp {
-  background: var(--tempoya-blue) !important;
+  background: #1769e8 !important; color: #ffffff !important; border: 2px solid #1769e8 !important;
 }
 #tempoya-phone-form #tempoya-signout {
-  background: #fff !important;
-  color: var(--tempoya-danger) !important;
-  border: 2px solid var(--tempoya-danger) !important;
+  background: #c62838 !important; color: #ffffff !important; border: 2px solid #ff8792 !important;
 }
-#tempoya-phone-form button:disabled {
-  opacity: .62;
-  filter: saturate(.75);
+#tempoya-phone-form button:disabled { opacity: .58 !important; }
+#tempoya-phone-form input { background: #ffffff !important; color: #111827 !important; border: 2px solid #b9c7dc !important; }
+#tempoya-phone-form input::placeholder { color: #626b7a !important; opacity: 1; }
+#tempoya-phone-form label { color: #ffffff !important; }
+#tempoya-auth-status { color: #ffffff !important; background: #243657 !important; border: 2px solid #86a6da !important; overflow-wrap: anywhere; padding: .85rem; border-radius: .75rem; }
+@media (max-width: 600px) {
+  #account { padding-left: 5%; padding-right: 5%; }
+  #tempoya-phone-form { width: 100%; }
+  #tempoya-phone-form button { width: 100%; }
 }
-#tempoya-auth-status {
-  color: var(--tempoya-text);
-  background: var(--tempoya-surface-raised);
-  border: 1px solid #65779c;
-  line-height: 1.5;
-}
-#tempoya-phone-form input {
-  min-height: 46px;
-  border-radius: 9px;
-  border-color: #8392b1;
-}
-#tempoya-phone-form label { color: var(--tempoya-text); }
