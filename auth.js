@@ -92,18 +92,27 @@ if (form) {
       say("Firebase setup is not complete.");
       return;
     }
-    let phone = phoneInput.value.trim().replace(/[\s()-]/g, "");
+    const dialCode = document.getElementById("tempoya-country-dial")?.value || "";
+    let nationalNumber = phoneInput.value.trim().replace(/[^\d]/g, "");
 
-    // Convenience for India: accept 10-digit mobile numbers and 91XXXXXXXXXX too.
-    // Firebase receives the final phone number in E.164 format.
-    if (/^[6-9]\d{9}$/.test(phone)) {
-      phone = "+91" + phone;
-    } else if (/^91[6-9]\d{9}$/.test(phone)) {
-      phone = "+" + phone;
+    // If the user pastes a full international number, use it as-is.
+    // Otherwise combine the selected country calling code with the national number.
+    let phone = "";
+    const pastedInternational = phoneInput.value.trim().replace(/[\s()-]/g, "");
+    if (pastedInternational.startsWith("+")) {
+      phone = pastedInternational;
+    } else {
+      // Strip a repeated selected calling code if the user included it in the national field.
+      const dialDigits = dialCode.replace(/\D/g, "");
+      if (dialDigits && nationalNumber.startsWith(dialDigits) && nationalNumber.length > 10) {
+        nationalNumber = nationalNumber.slice(dialDigits.length);
+      }
+      phone = dialCode + nationalNumber;
     }
 
+    // E.164: '+' followed by 8–15 digits overall; the first digit cannot be zero.
     if (!/^\+[1-9]\d{7,14}$/.test(phone)) {
-      say("Enter a valid phone number. India: use 10 digits or +91 followed by 10 digits.");
+      say("Enter a valid mobile number for the selected country, or paste the full international number including +.");
       phoneInput.focus();
       return;
     }
