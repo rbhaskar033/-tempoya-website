@@ -1,0 +1,26 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // A signed-in user can read and edit only their own profile document.
+    // Never use an open rule such as allow read, write: if true.
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() >= 2
+        && request.resource.data.displayName.size() <= 60
+        && request.resource.data.age is int
+        && request.resource.data.age >= 18
+        && request.resource.data.age <= 120
+        && request.resource.data.country is string
+        && request.resource.data.preferredLanguage is string;
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Deny all other collections unless a later feature adds explicit rules.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
