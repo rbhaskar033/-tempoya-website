@@ -34,7 +34,7 @@ const FEES = {
   KR: { country: "South Korea", currency: "krw", amount: 1 },
   MY: { country: "Malaysia", currency: "myr", amount: 100 },
   TH: { country: "Thailand", currency: "thb", amount: 100 },
-  ID: { country: "Indonesia", currency: "idr", amount: 100 },
+  ID: { country: "Indonesia", currency: "idr", amount: 1 },
   PH: { country: "Philippines", currency: "php", amount: 100 }
 };
 
@@ -85,9 +85,9 @@ exports.createVerificationCheckout = onCall(
       if (fresh.exists && fresh.data().status === "paid") {
         throw new HttpsError("already-exists", "Verification fee already paid.");
       }
-      if (fresh.exists && fresh.data().status === "pending" &&
+      if (fresh.exists && ["pending", "creating"].includes(fresh.data().status) &&
           fresh.data().createdAt?.toMillis?.() > Date.now() - 30 * 60 * 1000) {
-        throw new HttpsError("aborted", "A checkout is already pending. Reopen the existing checkout or wait for it to expire.");
+        throw new HttpsError("aborted", "A checkout is already being created or is pending. Reopen the existing checkout or wait for it to expire.");
       }
       tx.set(paymentRef, {
         uid, countryCode, currency: fee.currency, amount: fee.amount,
