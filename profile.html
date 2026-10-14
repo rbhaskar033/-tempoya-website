@@ -24,7 +24,7 @@
 </form><section id="verification-next-step" class="account-status" hidden>
 <strong>Next step: One-time account verification</strong>
 <p id="verification-fee-summary">Save your profile first to view the planned verification fee.</p>
-<p class="account-note">This fee is for account verification only and is intended to be charged once per account. It is non-refundable except where applicable law requires otherwise. Payments are not enabled on this page, so no money will be collected here.</p>
+<p class="account-note">This fee is for account verification only and is intended to be charged once per account. It is non-refundable except where applicable law requires otherwise. Live checkout works only after the secure payment functions and provider secrets are deployed.</p><button id="pay-verification" class="button primary" type="button">Continue to Secure Verification Payment</button><p id="payment-status" class="account-note" role="status" aria-live="polite">Payment setup status will appear here.</p>
 </section>
 <p id="signedout" hidden><a class="button secondary" href="index.html#account">Return to Sign In</a></p>
 </section></main>
@@ -34,9 +34,11 @@ import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase
 import {getAuth,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {getFirestore,doc,getDoc,setDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 import {getStorage,ref,uploadBytes,getDownloadURL} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
+import {getFunctions,httpsCallable} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-functions.js";
 import {firebaseConfig} from "./firebase-config.js";
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),storage=getStorage(app);
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),storage=getStorage(app),functions=getFunctions(app,"asia-south1");
 const $=id=>document.getElementById(id),form=$("profile-form"),status=$("status");
+let profileSaved=false;
 let user=null,photoURL="",busy=false,photoWarning="";
 function say(t,kind=""){status.textContent=t;status.className="account-status"+(kind?" "+kind:"")}
 function lock(v){busy=v;$("save").disabled=v;$("reload").disabled=v;$("signout").disabled=v}
@@ -47,12 +49,13 @@ if(!panel||!summary)return;
 const countries=window.TEMPOYA_COUNTRIES||[];
 const c=countries.find(x=>x.country===countryName);
 panel.hidden=!countryName;
+$("pay-verification").hidden=!profileSaved;
 summary.textContent=c
 ? "Profile saved. Planned one-time account verification fee: "+c.currencySymbol+c.verificationFeeAmount+" "+c.currencyCode+"."
 : "Profile saved. Choose a supported country and save your profile to view the planned fee.";
 }
 function fill(d={}){$("displayName").value=d.displayName||"";$("age").value=d.age??"";$("country").value=d.country||"";$("language").value=d.preferredLanguage||"en";$("gender").value=d.gender||"not_set";photoURL=d.photoURL||"";if(photoURL)$("photo-preview").src=photoURL;showVerificationNextStep(d.country||"")}
-async function load(){if(!user)return;lock(true);try{const s=await getDoc(userDoc());fill(s.exists()?s.data():{});say(s.exists()?"Saved profile loaded from Firestore.":"No saved profile yet. Enter your details and tap Save Profile.")}catch(e){console.error(e);say("Could not read Firestore. Check Firestore is enabled and its rules permit this signed-in user to read users/{uid}. Error: "+(e.code||e.message),"error")}finally{lock(false)}}
+async function load(){if(!user)return;lock(true);try{const s=await getDoc(userDoc());profileSaved=s.exists() && !!s.data().displayName && Number.isInteger(s.data().age) && s.data().age>=18 && !!s.data().country;fill(s.exists()?s.data():{});showVerificationNextStep(profileSaved?s.data().country:"");say(s.exists()?"Saved profile loaded from Firestore.":"No saved profile yet. Enter your details and tap Save Profile.")}catch(e){console.error(e);say("Could not read Firestore. Check Firestore is enabled and its rules permit this signed-in user to read users/{uid}. Error: "+(e.code||e.message),"error")}finally{lock(false)}}
 $("photo").addEventListener("change",()=>{const f=$("photo").files?.[0];if(!f)return;if(!["image/jpeg","image/png","image/webp"].includes(f.type)||f.size>2*1024*1024){$("photo").value="";say("Choose JPG, PNG or WebP, no larger than 2 MB.","error");return} $("photo-preview").src=URL.createObjectURL(f)});
 form.addEventListener("submit",async e=>{e.preventDefault();if(!user||busy)return;const displayName=$("displayName").value.trim(),age=Number($("age").value),country=$("country").value,preferredLanguage=$("language").value,gender=$("gender").value;if(displayName.length<2||displayName.length>60)return say("Display name must be 2–60 characters.","error");if(!Number.isInteger(age)||age<18||age>120)return say("TEMPOYA is for adults 18+. Enter an age from 18 to 120.","error");if(!country||!preferredLanguage)return say("Choose your country and preferred language.","error");lock(true);say("Saving profile…");
 try{
@@ -69,13 +72,32 @@ if(image){
   }
 }
 await setDoc(userDoc(),{displayName,age,country,preferredLanguage,gender,photoURL,phoneNumber:user.phoneNumber||null,accountStatus:"active",updatedAt:serverTimestamp()},{merge:true});
-showVerificationNextStep(country);say("Profile saved to Firestore. Next, review the one-time account verification fee below."+(photoWarning||""),photoWarning?"":"success");
+profileSaved=true;showVerificationNextStep(country);say("Profile saved to Firestore. Next, review the one-time account verification fee below."+(photoWarning||""),photoWarning?"":"success");
 }catch(e){
  console.error(e);
  let msg=e.message||"Unknown error";
  if(e.code==="permission-denied")msg="Firestore security rules denied access. Confirm the owner-only rules are published for users/{uid}.";
  say("Profile details were not saved: "+(e.code||"")+" "+msg,"error")
 }finally{lock(false)}});
+$("pay-verification").addEventListener("click",async()=>{
+if(!user||!profileSaved)return say("Sign in and save your profile before payment.","error");
+const countryName=$("country").value;
+const country=(window.TEMPOYA_COUNTRIES||[]).find(x=>x.country===countryName);
+if(!country)return $("payment-status").textContent="This country is not configured for verification checkout.";
+const btn=$("pay-verification");btn.disabled=true;$("payment-status").textContent="Connecting to secure checkout…";
+try{
+const createCheckout=httpsCallable(functions,"createVerificationCheckout");
+const result=await createCheckout({countryCode:country.countryCode});
+if(!result.data?.checkoutUrl)throw new Error("Secure checkout URL was not returned.");
+$("payment-status").textContent="Opening secure payment page…";
+location.assign(result.data.checkoutUrl);
+}catch(e){
+console.error("TEMPOYA verification checkout error",e);
+$("payment-status").textContent=(e.code==="functions/not-found"||e.code==="not-found")
+?"Secure payment backend is not deployed yet. No money has been collected.":(e.message||"Secure checkout is not available yet. No money has been collected.");
+btn.disabled=false;
+}
+});
 $("reload").addEventListener("click",load);
 $("signout").addEventListener("click",async()=>{if(!user||busy)return;lock(true);try{await signOut(auth);location.replace("index.html#account")}catch(e){say("Sign out failed: "+(e.code||e.message),"error");lock(false)}});
 onAuthStateChanged(auth,async u=>{user=u;if(!u){form.hidden=true;$("signedout").hidden=false;say("Not signed in. Return to the sign-in page.");return} $("signedout").hidden=true;form.hidden=false;await load()});
