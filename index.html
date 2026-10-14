@@ -158,7 +158,7 @@
 <section class="section" id="verification-fee">
   <p class="eyebrow">ONE-TIME ACCOUNT VERIFICATION</p>
   <h2>Simple, transparent verification fee</h2>
-  <p>Select your country to see the planned one-time account verification charge in local currency. This is a displayed planned fee only; online charging is not enabled until a payment provider, receipts, refunds, and compliance checks are completed.</p>
+  <p>After you create and save your profile, TEMPOYA will request a one-time account verification fee in the selected country’s local currency. This fee is for account verification only, not for downloading the app or booking a meeting. The fee is intended to be non-refundable, except where a refund is required by applicable law. Online charging is not enabled on this preview page.</p>
   <div style="max-width:520px;margin-top:1rem">
     <label for="verification-country">Country
       <select id="verification-country" required style="display:block;width:100%;padding:.85rem;margin-top:.4rem;border-radius:.6rem">
@@ -167,7 +167,7 @@
     </label>
     <div id="verification-fee-display" role="status" aria-live="polite" style="margin-top:1rem;padding:1rem;border:1px solid #cbd2df;border-radius:.75rem">
       <strong>One-time fee: ₹1</strong>
-      <p>No payment is collected on this preview page.</p>
+      <p>One account · one verification fee. No payment is collected on this preview page.</p>
     </div>
   </div>
 </section>
@@ -242,7 +242,7 @@
  if(!select||!display||!Array.isArray(window.TEMPOYA_COUNTRIES))return;
  select.innerHTML=window.TEMPOYA_COUNTRIES.map(c=>'<option value="'+c.countryCode+'">'+c.country+'</option>').join("");
  select.value="IN";
- function render(){const c=window.TEMPOYA_COUNTRIES.find(x=>x.countryCode===select.value);if(!c)return;display.innerHTML='<strong>One-time fee: '+c.currencySymbol+c.verificationFeeAmount+' '+c.currencyCode+'</strong><p>Account verification charge · one time only</p><p>No payment is collected on this preview page. Final charging depends on payment-provider and local-law readiness.</p>';}
+ function render(){const c=window.TEMPOYA_COUNTRIES.find(x=>x.countryCode===select.value);if(!c)return;display.innerHTML='<strong>One-time fee: '+c.currencySymbol+c.verificationFeeAmount+' '+c.currencyCode+'</strong><p>Account verification charge · one time only</p><p>Account verification only · one time per account · intended non-refundable except where law requires otherwise.</p><p>No payment is collected on this preview page. Live charging requires a payment provider and legal/compliance readiness.</p>';}
  select.addEventListener("change",render);render();
 })();
 </script>
