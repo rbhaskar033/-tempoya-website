@@ -92,12 +92,22 @@ if (form) {
       say("Firebase setup is not complete.");
       return;
     }
-    const phone = phoneInput.value.trim().replace(/[\s()-]/g, "");
+    let phone = phoneInput.value.trim().replace(/[\s()-]/g, "");
+
+    // Convenience for India: accept 10-digit mobile numbers and 91XXXXXXXXXX too.
+    // Firebase receives the final phone number in E.164 format.
+    if (/^[6-9]\d{9}$/.test(phone)) {
+      phone = "+91" + phone;
+    } else if (/^91[6-9]\d{9}$/.test(phone)) {
+      phone = "+" + phone;
+    }
+
     if (!/^\+[1-9]\d{7,14}$/.test(phone)) {
-      say("Enter a valid international phone number including + country code.");
+      say("Enter a valid phone number. India: use 10 digits or +91 followed by 10 digits.");
       phoneInput.focus();
       return;
     }
+    phoneInput.value = phone;
 
     busy = true;
     confirmationResult = null;
