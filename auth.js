@@ -1,7 +1,6 @@
 /*
- * TEMPOYA phone authentication foundation.
- * Real SMS remains disabled until firebase-config.js and Firebase Console setup are completed.
- * Never put service-account credentials or private keys in client-side files.
+ * TEMPOYA Firebase Phone OTP sign-in.
+ * Public Firebase web config belongs in firebase-config.js; never add service-account keys here.
  */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
@@ -16,9 +15,12 @@ if (form) {
   const signOutButton = document.getElementById("tempoya-signout");
   const recaptchaContainer = document.getElementById("tempoya-recaptcha-container");
   const status = document.getElementById("tempoya-auth-status");
+
   let confirmationResult = null;
   let recaptchaVerifier = null;
   let auth = null;
+  let busy = false;
+  let currentUser = null;
 
   const configured = Boolean(firebaseConfig &&
     firebaseConfig.apiKey && !String(firebaseConfig.apiKey).includes("PASTE_") &&
@@ -26,11 +28,19 @@ if (form) {
     firebaseConfig.projectId && !String(firebaseConfig.projectId).includes("PASTE_") &&
     firebaseConfig.appId && !String(firebaseConfig.appId).includes("PASTE_"));
 
-  function say(message) { status.textContent = message; }
-  function setBusy(busy) {
+  function say(message) {
+    status.textContent = message;
+  }
+
+  // Only disable Verify while sending/verifying or when there is no active SMS request.
+  // Do not disable it merely because the OTP field is still empty; show a clear validation message on tap.
+  function updateButtons() {
     sendButton.disabled = busy || !auth;
     verifyButton.disabled = busy || !auth || !confirmationResult;
+    signOutButton.hidden = !currentUser;
+    signOutButton.disabled = busy || !auth || !currentUser;
   }
+
   function explainAuthError(error) {
     const messages = {
       "auth/too-many-requests": "Too many attempts. Please wait before trying again.",
@@ -39,7 +49,7 @@ if (form) {
       "auth/operation-not-allowed": "Phone sign-in is not enabled in Firebase.",
       "auth/unauthorized-domain": "This website domain is not authorized in Firebase Authentication.",
       "auth/billing-not-enabled": "Firebase requires a linked billing account for SMS phone authentication.",
-      "auth/quota-exceeded": "Firebase SMS quota reached. Wait or review your Firebase billing/quota settings.",
+      "auth/quota-exceeded": "Firebase SMS quota reached. Wait or review Firebase billing/quota settings.",
       "auth/invalid-verification-code": "Incorrect OTP. Check the code and try again.",
       "auth/code-expired": "That OTP expired. Request a new code."
     };
@@ -47,23 +57,26 @@ if (form) {
   }
 
   if (!configured) {
-    say("Setup required: add the Firebase Web App config in firebase-config.js, then authorize this domain and configure SMS regions in Firebase Console.");
+    say("Setup required: check firebase-config.js, Firebase authorized domains and SMS region settings.");
     sendButton.disabled = true;
     verifyButton.disabled = true;
+    signOutButton.hidden = true;
   } else {
     try {
       const app = initializeApp(firebaseConfig);
       auth = getAuth(app);
       auth.useDeviceLanguage();
+
       onAuthStateChanged(auth, user => {
+        currentUser = user;
+        updateButtons();
+        // Do not overwrite the active OTP prompt when Firebase reports an existing session.
+        if (confirmationResult) return;
         if (user) {
-          say("Signed in. Phone: " + (user.phoneNumber || "verified") + ". UID: " + user.uid);
-          signOutButton.hidden = false;
+          say("Phone verified and signed in. Phone: " + (user.phoneNumber || "verified") + ". UID: " + user.uid);
         } else {
           say("Not signed in. Enter your phone number and request an SMS code.");
-          signOutButton.hidden = true;
         }
-        setBusy(false);
       });
     } catch (error) {
       say("Firebase initialization failed. Check the Web App configuration and reload.");
@@ -75,68 +88,97 @@ if (form) {
 
   form.addEventListener("submit", async event => {
     event.preventDefault();
-    if (!auth) return say("Firebase setup is not complete.");
-    const phone = phoneInput.value.trim().replace(/[\s()-]/g, "");
-    if (!/^\+[1-9]\d{7,14}$/.test(phone)) {
-      return say("Enter a valid international phone number including + country code.");
+    if (!auth) {
+      say("Firebase setup is not complete.");
+      return;
     }
-    setBusy(true);
+    const phone = phoneInput.value.trim().replace(/[\\s()-]/g, "");
+    if (!/^\\+[1-9]\\d{7,14}$/.test(phone)) {
+      say("Enter a valid international phone number including + country code.");
+      phoneInput.focus();
+      return;
+    }
+
+    busy = true;
     confirmationResult = null;
-    verifyButton.disabled = true;
+    updateButtons();
+    say("Preparing security check…");
+
     try {
       if (recaptchaVerifier) {
         recaptchaVerifier.clear();
         recaptchaVerifier = null;
       }
       recaptchaContainer.replaceChildren();
-      // Use the visible reCAPTCHA container for predictable manual testing on mobile browsers.
       recaptchaVerifier = new RecaptchaVerifier(auth, "tempoya-recaptcha-container", {});
       await recaptchaVerifier.render();
-      confirmationResult = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
-      say("SMS code requested. Enter the 6-digit code received on your phone.");
+      const result = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
+      confirmationResult = result;
+      otpInput.value = "";
+      say("SMS code requested. Enter the 6-digit code received on your phone, then tap Verify OTP & Sign In.");
+      updateButtons();
       otpInput.focus();
     } catch (error) {
       console.error("TEMPOYA OTP send error", error);
-      say(explainAuthError(error));
       confirmationResult = null;
+      say(explainAuthError(error));
       if (recaptchaVerifier) {
         recaptchaVerifier.clear();
         recaptchaVerifier = null;
       }
       recaptchaContainer.replaceChildren();
     } finally {
-      setBusy(false);
+      busy = false;
+      updateButtons();
     }
   });
 
   verifyButton.addEventListener("click", async () => {
-    if (!confirmationResult) return say("First request an SMS code.");
+    if (!confirmationResult) {
+      say("First tap Send OTP and wait until the SMS code is requested.");
+      return;
+    }
     const code = otpInput.value.trim();
-    if (!/^\d{6}$/.test(code)) return say("Enter the 6-digit OTP.");
-    setBusy(true);
+    if (!/^\\d{6}$/.test(code)) {
+      say("Enter all 6 digits from the SMS before signing in.");
+      otpInput.focus();
+      return;
+    }
+
+    busy = true;
+    updateButtons();
+    say("Verifying your SMS code…");
     try {
-      const credential = await confirmationResult.confirm(code);
+      const result = await confirmationResult.confirm(code);
       confirmationResult = null;
-      say("Phone verified and signed in. UID: " + credential.user.uid);
+      currentUser = result.user;
+      otpInput.value = "";
+      say("Phone verified and signed in. Phone: " + (result.user.phoneNumber || "verified") + ". UID: " + result.user.uid);
     } catch (error) {
       console.error("TEMPOYA OTP verification error", error);
       say(explainAuthError(error));
     } finally {
-      setBusy(false);
+      busy = false;
+      updateButtons();
     }
   });
 
   signOutButton.addEventListener("click", async () => {
     if (!auth) return;
+    busy = true;
+    updateButtons();
     try {
       await signOut(auth);
+      currentUser = null;
       confirmationResult = null;
       otpInput.value = "";
-      setBusy(false);
       say("Signed out successfully.");
     } catch (error) {
       console.error("TEMPOYA sign-out error", error);
       say("Could not sign out. Please retry.");
+    } finally {
+      busy = false;
+      updateButtons();
     }
   });
 }
