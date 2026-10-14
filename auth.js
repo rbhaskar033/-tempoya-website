@@ -172,7 +172,9 @@ if (form) {
       confirmationResult = null;
       currentUser = result.user;
       otpInput.value = "";
-      say("Phone verified and signed in. Phone: " + (result.user.phoneNumber || "verified") + ". UID: " + result.user.uid);
+      say("Phone verified and signed in. Opening your TEMPOYA account…");
+      // Send the authenticated user to the account landing page.
+      window.location.assign("profile.html");
     } catch (error) {
       console.error("TEMPOYA OTP verification error", error);
       say(explainAuthError(error));
