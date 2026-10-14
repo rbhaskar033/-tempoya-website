@@ -21,8 +21,14 @@
 <div class="full"><label for="photo">Profile photo (optional; JPG, PNG or WebP, max 2 MB)<input id="photo" type="file" accept="image/jpeg,image/png,image/webp"></label><div class="photo-row"><img id="photo-preview" alt="Profile photo preview" src="tempoya-website-preview.png" style="object-fit:cover"><span class="account-note">Photo upload needs Firebase Storage enabled and owner-only Storage rules.</span></div></div>
 <p class="full account-note">Required fields are marked *. Do not upload identity documents here. Identity verification is a separate feature.</p>
 <div class="full account-actions"><button id="save" class="button primary" type="submit">Save Profile</button><button id="reload" class="button secondary" type="button">Reload Saved Profile</button><button id="signout" class="button secondary" type="button">Sign Out</button></div>
-</form><p id="signedout" hidden><a class="button secondary" href="index.html#account">Return to Sign In</a></p>
+</form><section id="verification-next-step" class="account-status" hidden>
+<strong>Next step: One-time account verification</strong>
+<p id="verification-fee-summary">Save your profile first to view the planned verification fee.</p>
+<p class="account-note">This fee is for account verification only and is intended to be charged once per account. It is non-refundable except where applicable law requires otherwise. Payments are not enabled on this page, so no money will be collected here.</p>
+</section>
+<p id="signedout" hidden><a class="button secondary" href="index.html#account">Return to Sign In</a></p>
 </section></main>
+<script src="country-currency-config.js"></script>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {getAuth,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
@@ -35,7 +41,17 @@ let user=null,photoURL="",busy=false,photoWarning="";
 function say(t,kind=""){status.textContent=t;status.className="account-status"+(kind?" "+kind:"")}
 function lock(v){busy=v;$("save").disabled=v;$("reload").disabled=v;$("signout").disabled=v}
 function userDoc(){if(!user)throw new Error("Please sign in again.");return doc(db,"users",user.uid)}
-function fill(d={}){$("displayName").value=d.displayName||"";$("age").value=d.age??"";$("country").value=d.country||"";$("language").value=d.preferredLanguage||"en";$("gender").value=d.gender||"not_set";photoURL=d.photoURL||"";if(photoURL)$("photo-preview").src=photoURL}
+function showVerificationNextStep(countryName){
+const panel=$("verification-next-step"),summary=$("verification-fee-summary");
+if(!panel||!summary)return;
+const countries=window.TEMPOYA_COUNTRIES||[];
+const c=countries.find(x=>x.country===countryName);
+panel.hidden=!countryName;
+summary.textContent=c
+? "Profile saved. Planned one-time account verification fee: "+c.currencySymbol+c.verificationFeeAmount+" "+c.currencyCode+"."
+: "Profile saved. Choose a supported country and save your profile to view the planned fee.";
+}
+function fill(d={}){$("displayName").value=d.displayName||"";$("age").value=d.age??"";$("country").value=d.country||"";$("language").value=d.preferredLanguage||"en";$("gender").value=d.gender||"not_set";photoURL=d.photoURL||"";if(photoURL)$("photo-preview").src=photoURL;showVerificationNextStep(d.country||"")}
 async function load(){if(!user)return;lock(true);try{const s=await getDoc(userDoc());fill(s.exists()?s.data():{});say(s.exists()?"Saved profile loaded from Firestore.":"No saved profile yet. Enter your details and tap Save Profile.")}catch(e){console.error(e);say("Could not read Firestore. Check Firestore is enabled and its rules permit this signed-in user to read users/{uid}. Error: "+(e.code||e.message),"error")}finally{lock(false)}}
 $("photo").addEventListener("change",()=>{const f=$("photo").files?.[0];if(!f)return;if(!["image/jpeg","image/png","image/webp"].includes(f.type)||f.size>2*1024*1024){$("photo").value="";say("Choose JPG, PNG or WebP, no larger than 2 MB.","error");return} $("photo-preview").src=URL.createObjectURL(f)});
 form.addEventListener("submit",async e=>{e.preventDefault();if(!user||busy)return;const displayName=$("displayName").value.trim(),age=Number($("age").value),country=$("country").value,preferredLanguage=$("language").value,gender=$("gender").value;if(displayName.length<2||displayName.length>60)return say("Display name must be 2–60 characters.","error");if(!Number.isInteger(age)||age<18||age>120)return say("TEMPOYA is for adults 18+. Enter an age from 18 to 120.","error");if(!country||!preferredLanguage)return say("Choose your country and preferred language.","error");lock(true);say("Saving profile…");
@@ -53,7 +69,7 @@ if(image){
   }
 }
 await setDoc(userDoc(),{displayName,age,country,preferredLanguage,gender,photoURL,phoneNumber:user.phoneNumber||null,accountStatus:"active",updatedAt:serverTimestamp()},{merge:true});
-say("Profile saved to Firestore."+(photoWarning||" Tap Reload Saved Profile to verify it reopens."),photoWarning?"":"success");
+showVerificationNextStep(country);say("Profile saved to Firestore. Next, review the one-time account verification fee below."+(photoWarning||""),photoWarning?"":"success");
 }catch(e){
  console.error(e);
  let msg=e.message||"Unknown error";
