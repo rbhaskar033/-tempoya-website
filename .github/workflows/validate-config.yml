@@ -1,0 +1,23 @@
+name: Validate TEMPOYA country and pricing config
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, "fix/tempoya-pricing-audit"]
+
+permissions:
+  contents: read
+
+jobs:
+  validate-config:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Validate country and pricing configuration
+        run: node scripts/validate-country-config.cjs

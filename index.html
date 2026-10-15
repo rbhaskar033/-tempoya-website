@@ -106,6 +106,8 @@
     var grid = document.getElementById('tempoya-tariff-grid');
     if (!select || !grid || !window.TEMPOYA_COUNTRIES || !window.TEMPOYA_TARIFFS) return;
     var countries = window.TEMPOYA_COUNTRIES;
+    // Clear the static loading placeholder before adding the real country options.
+    select.replaceChildren();
     countries.forEach(function (c) {
       var option = document.createElement('option');
       option.value = c.countryCode;
@@ -131,7 +133,7 @@
           var label = document.createElement('span');
           label.textContent = item.duration + ' ';
           var price = document.createElement('strong');
-          price.textContent = country.currencySymbol + item.amount.toLocaleString('en-US') + ' ' + country.currencyCode;
+          price.textContent = country.countryCode === 'IN'\n            ? country.currencySymbol + item.amount.toLocaleString('en-US') + ' ' + country.currencyCode\n            : 'Local price to be confirmed';
           p.appendChild(label);
           p.appendChild(price);
           card.appendChild(p);
