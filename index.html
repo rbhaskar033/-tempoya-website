@@ -133,7 +133,7 @@
           var label = document.createElement('span');
           label.textContent = item.duration + ' ';
           var price = document.createElement('strong');
-          price.textContent = country.currencySymbol + item.amount.toLocaleString('en-US') + ' ' + country.currencyCode;
+          price.textContent = country.countryCode === 'IN'\n            ? country.currencySymbol + item.amount.toLocaleString('en-US') + ' ' + country.currencyCode\n            : 'Local price to be confirmed';
           p.appendChild(label);
           p.appendChild(price);
           card.appendChild(p);
