@@ -106,6 +106,8 @@
     var grid = document.getElementById('tempoya-tariff-grid');
     if (!select || !grid || !window.TEMPOYA_COUNTRIES || !window.TEMPOYA_TARIFFS) return;
     var countries = window.TEMPOYA_COUNTRIES;
+    // Clear the static loading placeholder before adding the real country options.
+    select.replaceChildren();
     countries.forEach(function (c) {
       var option = document.createElement('option');
       option.value = c.countryCode;
