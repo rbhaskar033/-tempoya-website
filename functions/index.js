@@ -191,3 +191,10 @@ exports.stripeVerificationWebhook = onRequest(
     }
   }
 );
+
+
+// Launch foundation callables (review and test before production deployment).
+const launchFoundation = require("./launch-foundation");
+exports.saveEmergencyContact = launchFoundation.saveEmergencyContact;
+exports.requestSOS = launchFoundation.requestSOS;
+exports.confirmBookingCompletion = launchFoundation.confirmBookingCompletion;
