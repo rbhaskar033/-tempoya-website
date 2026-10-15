@@ -126,16 +126,22 @@
         var heading = document.createElement('h3');
         heading.textContent = tier;
         card.appendChild(heading);
-        window.TEMPOYA_TARIFFS[tier].forEach(function (item) {
-          var p = document.createElement('p');
-          var label = document.createElement('span');
-          label.textContent = item.duration + ' ';
-          var price = document.createElement('strong');
-          price.textContent = country.currencySymbol + item.amount.toLocaleString('en-US') + ' ' + country.currencyCode;
-          p.appendChild(label);
-          p.appendChild(price);
-          card.appendChild(p);
-        });
+        if (country.countryCode !== 'IN') {
+          var note = document.createElement('p');
+          note.textContent = 'Local price to be confirmed before launch.';
+          card.appendChild(note);
+        } else {
+          window.TEMPOYA_TARIFFS[tier].forEach(function (item) {
+            var p = document.createElement('p');
+            var label = document.createElement('span');
+            label.textContent = item.duration + ' ';
+            var price = document.createElement('strong');
+            price.textContent = country.currencySymbol + item.amount.toLocaleString('en-IN') + ' ' + country.currencyCode;
+            p.appendChild(label);
+            p.appendChild(price);
+            card.appendChild(p);
+          });
+        }
         grid.appendChild(card);
       });
     }
@@ -228,14 +234,7 @@
   <span>© 2026 TEMPOYA</span>
 </footer>
 <script>
-(function(){
- const select=document.getElementById("verification-country"),display=document.getElementById("verification-fee-display");
- if(!select||!display||!Array.isArray(window.TEMPOYA_COUNTRIES))return;
- select.innerHTML=window.TEMPOYA_COUNTRIES.map(c=>'<option value="'+c.countryCode+'">'+c.country+'</option>').join("");
- select.value="IN";
- function render(){const c=window.TEMPOYA_COUNTRIES.find(x=>x.countryCode===select.value);if(!c)return;display.innerHTML='<strong>One-time fee: '+c.currencySymbol+c.verificationFeeAmount+' '+c.currencyCode+'</strong><p>Account verification charge · one time only</p><p>Account verification only · one time per account · intended non-refundable except where law requires otherwise.</p><p>No payment is collected on this preview page. Live charging requires a payment provider and legal/compliance readiness.</p>';}
- select.addEventListener("change",render);render();
-})();
+// Legacy verification-fee selector removed: the active country/currency preview is above.
 </script>
 </body>
 </html>
