@@ -84,18 +84,58 @@ if(!user||!profileSaved)return say("Sign in and save your profile before payment
 const countryName=$("country").value;
 const country=(window.TEMPOYA_COUNTRIES||[]).find(x=>x.country===countryName);
 if(!country)return $("payment-status").textContent="This country is not configured for verification checkout.";
-const btn=$("pay-verification");btn.disabled=true;$("payment-status").textContent="Connecting to secure checkout…";
+const btn=$("pay-verification");btn.disabled=true;$("payment-status").textContent="Preparing secure Razorpay checkout…";
 try{
-const createCheckout=httpsCallable(functions,"createVerificationCheckout");
-const result=await createCheckout({countryCode:country.countryCode});
-if(!result.data?.checkoutUrl)throw new Error("Secure checkout URL was not returned.");
-$("payment-status").textContent="Opening secure payment page…";
-location.assign(result.data.checkoutUrl);
+const createOrder=httpsCallable(functions,"createRazorpayVerificationOrder");
+const result=await createOrder({countryCode:country.countryCode});
+const order=result.data;
+if(!order?.keyId||!order?.orderId)throw new Error("Razorpay order details were not returned.");
+if(!window.Razorpay){
+ await new Promise((resolve,reject)=>{
+  const script=document.createElement("script");script.src="https://checkout.razorpay.com/v1/checkout.js";
+  script.onload=resolve;script.onerror=()=>reject(new Error("Could not load Razorpay Checkout. Check your internet connection."));
+  document.head.appendChild(script);
+ });
+}
+const checkout=new window.Razorpay({
+ key:order.keyId,order_id:order.orderId,amount:order.amount,currency:order.currency,
+ name:order.businessName||"TEMPOYA",description:order.description||"One-time account verification",
+ prefill:order.prefill||{},
+ theme:{color:"#d63384"},
+ handler:async function(response){
+  $("payment-status").textContent="Payment response received. Verifying securely with the server…";
+  try{
+   const verify=httpsCallable(functions,"verifyRazorpayVerificationPayment");
+   const confirmed=await verify({
+    razorpay_order_id:response.razorpay_order_id,
+    razorpay_payment_id:response.razorpay_payment_id,
+    razorpay_signature:response.razorpay_signature
+   });
+   if(confirmed.data?.verified){
+    $("payment-status").textContent="Payment verified by the server. Account status: payment received; verification review may still be required.";
+    btn.disabled=true;
+    await load();
+   }else throw new Error("Server did not confirm the payment.");
+  }catch(verifyError){
+   console.error("Razorpay verification failed",verifyError);
+   $("payment-status").textContent="Payment could not yet be verified by TEMPOYA. Do not pay again. Contact support and keep your Razorpay payment ID: "+(response.razorpay_payment_id||"not available");
+   btn.disabled=false;
+  }
+ },
+ modal:{ondismiss:function(){$("payment-status").textContent="Checkout closed. If you completed payment, do not pay again; check your payment status first.";btn.disabled=false;}}
+});
+checkout.on("payment.failed",function(response){
+ $("payment-status").textContent="Razorpay reported a payment failure. No verification status was changed. "+(response.error?.description||"Please check payment status before retrying.");
+ btn.disabled=false;
+});
+$("payment-status").textContent="Razorpay Checkout is opening. Live payment works only after the server functions, secrets, account approval and supported currency are configured.";
+checkout.open();
 }catch(e){
-console.error("TEMPOYA verification checkout error",e);
-$("payment-status").textContent=(e.code==="functions/not-found"||e.code==="not-found")
-?"Secure payment backend is not deployed yet. No money has been collected.":(e.message||"Secure checkout is not available yet. No money has been collected.");
-btn.disabled=false;
+ console.error("TEMPOYA Razorpay checkout error",e);
+ $("payment-status").textContent=(e.code==="functions/not-found"||e.code==="not-found")
+ ?"Razorpay payment backend is not deployed yet. No money was collected by TEMPOYA."
+ :(e.message||"Razorpay checkout is not ready. No verification status was changed.");
+ btn.disabled=false;
 }
 });
 $("reload").addEventListener("click",load);
