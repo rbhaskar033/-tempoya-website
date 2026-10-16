@@ -57,7 +57,7 @@ service cloud.firestore {
           && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.age >= 18
           && resource.data.discoverable == true);
       allow create, update: if owner(userId)
-        && request.resource.data.keys().hasOnly(['displayName','age','gender','country','preferredLanguage','bio','discoverable','updatedAt'])
+        && request.resource.data.keys().hasOnly(['displayName','age','gender','country','preferredLanguage','photoURL','bio','discoverable','updatedAt'])
         && request.resource.data.displayName is string
         && request.resource.data.age is int
         && request.resource.data.age >= 18
