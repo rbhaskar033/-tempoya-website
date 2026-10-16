@@ -382,11 +382,10 @@ footer b {
     display: flex;
     width: 100%;
     gap: 16px;
-    flex-wrap: nowrap;
-    overflow-x: auto;
+    flex-wrap: wrap;
+    overflow-x: visible;
     padding: 4px 0 10px;
-    scrollbar-width: thin;
-    -webkit-overflow-scrolling: touch;
+    scrollbar-width: auto;
   }
 
   nav a {
