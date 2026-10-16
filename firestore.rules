@@ -36,10 +36,14 @@ service cloud.firestore {
 
     // Public discovery records expose only a limited profile; the client must never write phone numbers here.
     match /publicProfiles/{userId} {
-      // Only signed-in adults can discover profiles explicitly published by their owner.
-      // Owners can still read their own profile when it is hidden.
+      // Owners can read their own profile. Other users must be signed in,
+      // have an existing adult account, and the owner must have published the profile.
       allow read: if owner(userId)
-        || (signedIn() && resource.data.discoverable == true);
+        || (signedIn()
+          && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+          && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.age is int
+          && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.age >= 18
+          && resource.data.discoverable == true);
       allow create, update: if owner(userId)
         && request.resource.data.keys().hasOnly(['displayName','age','country','preferredLanguage','bio','discoverable','updatedAt'])
         && request.resource.data.displayName is string
