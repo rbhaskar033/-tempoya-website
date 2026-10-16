@@ -11,7 +11,22 @@ service firebase.storage {
       allow delete: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Deny all other objects unless a later feature adds explicit rules.
+    // Chat photos: only signed-in members of the mutual match can read them.
+    // Files are immutable; each sender can create files only in their own folder.
+    match /chatPhotos/{matchId}/{userId}/{fileName} {
+      function isMatchMember() {
+        return request.auth != null
+          && request.auth.uid in firestore.get(/databases/(default)/documents/matches/$(matchId)).data.members;
+      }
+      allow read: if isMatchMember();
+      allow create: if isMatchMember()
+        && request.auth.uid == userId
+        && request.resource.size <= 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp)');
+      allow update, delete: if false;
+    }
+
+    // Deny all other objects unless explicitly allowed above.
     match /{allPaths=**} {
       allow read, write: if false;
     }
