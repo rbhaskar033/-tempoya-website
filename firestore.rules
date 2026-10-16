@@ -109,7 +109,7 @@ service cloud.firestore {
           && request.resource.data.senderId == request.auth.uid
           && request.resource.data.text is string
           && request.resource.data.text.size() > 0
-          && request.resource.data.text.size() <= 5000
+          && request.resource.data.text.size() <= 10000
           && request.resource.data.editCount == 0
           && (!request.resource.data.keys().hasAny(['type'])
             || request.resource.data.type != 'photos'
@@ -126,7 +126,7 @@ service cloud.firestore {
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['text','editedAt','editCount','lastEditId'])
           && request.resource.data.text is string
           && request.resource.data.text.size() > 0
-          && request.resource.data.text.size() <= 5000
+          && request.resource.data.text.size() <= 10000
           && request.resource.data.editCount == (resource.data.keys().hasAny(['editCount']) ? resource.data.editCount + 1 : 1)
           && request.resource.data.lastEditId is string
           && existsAfter(/databases/$(database)/documents/matches/$(matchId)/messages/$(messageId)/edits/$(request.resource.data.lastEditId))
@@ -144,7 +144,7 @@ service cloud.firestore {
             && request.resource.data.oldText == get(/databases/$(database)/documents/matches/$(matchId)/messages/$(messageId)).data.text
             && request.resource.data.newText is string
             && request.resource.data.newText.size() > 0
-            && request.resource.data.newText.size() <= 5000;
+            && request.resource.data.newText.size() <= 10000;
           allow update, delete: if false;
         }
       }
