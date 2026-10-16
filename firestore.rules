@@ -110,12 +110,19 @@ service cloud.firestore {
           && request.resource.data.text is string
           && request.resource.data.text.size() > 0
           && request.resource.data.text.size() <= 5000
-          && request.resource.data.editCount == 0;
+          && request.resource.data.editCount == 0
+          && (!request.resource.data.keys().hasAny(['type'])
+            || request.resource.data.type != 'photos'
+            || (request.resource.data.photoPaths is list
+              && request.resource.data.photoPaths.size() >= 1
+              && request.resource.data.photoPaths.size() <= 10));
         // A sender may edit only the text and edit metadata. Deletion is never allowed.
         // Each edit must atomically create an append-only audit record.
         allow update: if isMatchMember(matchId)
           && resource.data.senderId == request.auth.uid
           && request.resource.data.senderId == resource.data.senderId
+          && resource.data.type != 'photos'
+          && request.time < resource.data.createdAt + duration.value(1, 'h')
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['text','editedAt','editCount','lastEditId'])
           && request.resource.data.text is string
           && request.resource.data.text.size() > 0
