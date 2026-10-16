@@ -3,10 +3,18 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() { return request.auth != null; }
     function owner(userId) { return signedIn() && request.auth.uid == userId; }
+    function isBlockedBetween(userA, userB) {
+      return exists(/databases/$(database)/documents/blocks/$(userA + '_' + userB))
+        || exists(/databases/$(database)/documents/blocks/$(userB + '_' + userA));
+    }
     function isMatchMember(matchId) {
       return signedIn()
         && exists(/databases/$(database)/documents/matches/$(matchId))
-        && request.auth.uid in get(/databases/$(database)/documents/matches/$(matchId)).data.members;
+        && request.auth.uid in get(/databases/$(database)/documents/matches/$(matchId)).data.members
+        && !isBlockedBetween(
+          get(/databases/$(database)/documents/matches/$(matchId)).data.members[0],
+          get(/databases/$(database)/documents/matches/$(matchId)).data.members[1]
+        );
     }
 
     match /users/{userId} {
@@ -68,7 +76,9 @@ service cloud.firestore {
     }
 
     match /matches/{matchId} {
-      allow read: if signedIn() && request.auth.uid in resource.data.members;
+      allow read: if signedIn()
+        && request.auth.uid in resource.data.members
+        && !isBlockedBetween(resource.data.members[0], resource.data.members[1]);
       allow create: if signedIn()
         && request.resource.data.members is list
         && request.resource.data.members.size() == 2
@@ -76,6 +86,7 @@ service cloud.firestore {
         && request.resource.data.members[1] is string
         && request.resource.data.members[0] < request.resource.data.members[1]
         && request.auth.uid in request.resource.data.members
+        && !isBlockedBetween(request.resource.data.members[0], request.resource.data.members[1])
         && matchId == request.resource.data.members[0] + '_' + request.resource.data.members[1]
         && exists(/databases/$(database)/documents/likes/$(request.resource.data.members[0] + '_' + request.resource.data.members[1]))
         && exists(/databases/$(database)/documents/likes/$(request.resource.data.members[1] + '_' + request.resource.data.members[0]))
@@ -84,6 +95,7 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/likes/$(request.resource.data.members[1] + '_' + request.resource.data.members[0])).data.from == request.resource.data.members[1]
         && get(/databases/$(database)/documents/likes/$(request.resource.data.members[1] + '_' + request.resource.data.members[0])).data.to == request.resource.data.members[0];
       allow update: if signedIn() && request.auth.uid in resource.data.members
+        && !isBlockedBetween(resource.data.members[0], resource.data.members[1])
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lastMessageAt']);
       allow delete: if false;
 
@@ -99,7 +111,9 @@ service cloud.firestore {
     }
 
     match /bookings/{bookingId} {
-      allow read: if signedIn() && request.auth.uid in resource.data.members;
+      allow read: if signedIn()
+        && request.auth.uid in resource.data.members
+        && isMatchMember(resource.data.matchId);
       allow create: if signedIn()
         && request.auth.uid == request.resource.data.requesterId
         && request.resource.data.members is list
@@ -140,7 +154,9 @@ service cloud.firestore {
       allow create: if signedIn()
         && request.resource.data.by == request.auth.uid
         && request.resource.data.blocked is string
-        && request.resource.data.blocked != request.auth.uid;
+        && request.resource.data.blocked != request.auth.uid
+        && blockId == request.resource.data.by + '_' + request.resource.data.blocked
+        && request.resource.data.keys().hasOnly(['by','blocked','createdAt']);
       allow update, delete: if false;
     }
 
