@@ -23,9 +23,10 @@
 <p class="verify-details">Currency: <strong id="verify-currency">—</strong> · Country code: <strong id="verify-code">—</strong></p>
 <p class="fee" id="verify-amount" aria-live="polite">—</p>
 <p><strong id="verify-frequency">One-time account verification fee</strong></p>
-<div class="verify-status" role="status" aria-live="polite">Display is ready for testing. Secure live payment is not yet confirmed as deployed, so this page will not collect money or mark an account verified.</div>
+<div class="verify-status" role="status" aria-live="polite">The payment button opens your profile first. Razorpay checkout will open only after the secure Firebase payment functions, Razorpay keys, App Check and merchant approval are configured. This fee page itself never collects card or bank details.</div>
 <p class="verify-details">After the secure payment backend is configured and tested, the payment provider must confirm payment server-side before TEMPOYA marks an account verified. The same account must not be charged again after successful verification. Local taxes, provider minimums and country-specific rules must be checked before launch.</p>
-<div class="verify-actions"><a class="button primary" href="profile.html">Sign in / Open Profile</a><a class="button secondary" href="index.html#pricing">View Country Pricing</a></div>
+<div class="verify-actions"><a class="button primary" id="verify-pay-link" href="profile.html">Continue to Verification Payment</a><a class="button secondary" href="index.html#pricing">View Country Pricing</a></div>
+<p class="verify-details">To pay, sign in and save a profile whose country matches the selected country. The secure Razorpay button is shown in the profile verification section. Do not retry a payment if its status is unclear.</p>
 </section></main>
 <script>
 (function(){
@@ -43,6 +44,7 @@
    document.getElementById("verify-frequency").textContent="One-time account verification fee ("+c.verificationFeeFrequency+")";
   }
   select.value="IN";select.addEventListener("change",render);render();
+  document.getElementById("verify-pay-link").addEventListener("click",function(e){e.preventDefault();location.href="profile.html#verification-next-step";});
  }
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();
