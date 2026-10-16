@@ -109,8 +109,37 @@ service cloud.firestore {
           && request.resource.data.senderId == request.auth.uid
           && request.resource.data.text is string
           && request.resource.data.text.size() > 0
-          && request.resource.data.text.size() <= 1000;
-        allow update, delete: if false;
+          && request.resource.data.text.size() <= 5000
+          && request.resource.data.editCount == 0;
+        // A sender may edit only the text and edit metadata. Deletion is never allowed.
+        // Each edit must atomically create an append-only audit record.
+        allow update: if isMatchMember(matchId)
+          && resource.data.senderId == request.auth.uid
+          && request.resource.data.senderId == resource.data.senderId
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['text','editedAt','editCount','lastEditId'])
+          && request.resource.data.text is string
+          && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 5000
+          && request.resource.data.editCount == resource.data.editCount + 1
+          && request.resource.data.lastEditId is string
+          && existsAfter(/databases/$(database)/documents/matches/$(matchId)/messages/$(messageId)/edits/$(request.resource.data.lastEditId))
+          && getAfter(/databases/$(database)/documents/matches/$(matchId)/messages/$(messageId)/edits/$(request.resource.data.lastEditId)).data.editorId == request.auth.uid
+          && getAfter(/databases/$(database)/documents/matches/$(matchId)/messages/$(messageId)/edits/$(request.resource.data.lastEditId)).data.oldText == resource.data.text
+          && getAfter(/databases/$(database)/documents/matches/$(matchId)/messages/$(messageId)/edits/$(request.resource.data.lastEditId)).data.newText == request.resource.data.text;
+        allow delete: if false;
+
+        match /edits/{editId} {
+          allow read: if isMatchMember(matchId);
+          allow create: if isMatchMember(matchId)
+            && request.resource.data.keys().hasOnly(['editorId','oldText','newText','createdAt'])
+            && request.resource.data.editorId == request.auth.uid
+            && get(/databases/$(database)/documents/matches/$(matchId)/messages/$(messageId)).data.senderId == request.auth.uid
+            && request.resource.data.oldText == get(/databases/$(database)/documents/matches/$(matchId)/messages/$(messageId)).data.text
+            && request.resource.data.newText is string
+            && request.resource.data.newText.size() > 0
+            && request.resource.data.newText.size() <= 5000;
+          allow update, delete: if false;
+        }
       }
     }
 
