@@ -1,6 +1,29 @@
 {
-  "functions": { "source": "functions", "runtime": "nodejs20" },
-  "firestore": { "rules": "firestore.rules" },
-  "storage": { "rules": "storage.rules" },
-  "hosting": { "public": ".", "ignore": ["firebase.json", ".firebaserc", "**/.*", "**/node_modules/**"] }
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs20"
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  },
+  "emulators": {
+    "firestore": {
+      "port": 8080
+    },
+    "ui": {
+      "enabled": false
+    }
+  }
 }

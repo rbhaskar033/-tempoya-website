@@ -1,0 +1,22 @@
+name: TEMPOYA Firestore Rules Tests
+on:
+  pull_request:
+    paths:
+      - "firestore.rules"
+      - "tests/**"
+      - "package.json"
+      - "firebase.json"
+      - ".github/workflows/firestore-rules-tests.yml"
+  workflow_dispatch:
+jobs:
+  rules-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npm run test:rules
+        env:
+          FIREBASE_CLI_EXPERIMENTS: webframeworks
