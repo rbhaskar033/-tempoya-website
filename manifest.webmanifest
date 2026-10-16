@@ -1,0 +1,13 @@
+{
+  "name": "TEMPOYA — Your Time. Your Choice.",
+  "short_name": "TEMPOYA",
+  "description": "Meet with mutual consent, verification and safety in mind.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#080b25",
+  "theme_color": "#080b25",
+  "icons": [
+    { "src": "/assets/tempoya-app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
