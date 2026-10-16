@@ -58,7 +58,7 @@ service cloud.firestore {
         && request.resource.data.age is int
         && request.resource.data.age >= 18
         && request.resource.data.gender is string
-        && request.resource.data.gender in ['not_set','woman','man','non_binary','self_described']
+        && request.resource.data.gender in ['woman','man','non_binary','self_described']
         && request.resource.data.country is string
         && request.resource.data.preferredLanguage is string
         && request.resource.data.bio is string
