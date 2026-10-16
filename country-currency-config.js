@@ -27,7 +27,7 @@ window.TEMPOYA_COUNTRIES = [
   {countryCode:"PH",country:"Philippines",currencyCode:"PHP",currencySymbol:"₱",verificationFeeAmount:1,verificationFeeFrequency:"one-time"}
 ];
 window.TEMPOYA_TARIFFS = {
-  Basic: [{duration:"15 min",amount:99},{duration:"30 min",amount:199},{duration:"1 hour",amount:299},{duration:"2 hours",amount:499},{duration:"3 hours",amount:699}],
+  Basic: [{duration:"15 min",amount:79},{duration:"30 min",amount:149},{duration:"1 hour",amount:299},{duration:"2 hours",amount:499},{duration:"3 hours",amount:699}],
   Standard: [{duration:"15 min",amount:299},{duration:"30 min",amount:499},{duration:"1 hour",amount:699},{duration:"2 hours",amount:999},{duration:"3 hours",amount:1299}],
   Premium: [{duration:"15 min",amount:599},{duration:"30 min",amount:999},{duration:"1 hour",amount:1299},{duration:"2 hours",amount:1799},{duration:"3 hours",amount:2299}]
 };
