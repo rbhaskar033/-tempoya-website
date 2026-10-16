@@ -15,6 +15,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
       - run: npm install
       - run: npx firebase emulators:exec --only firestore --project demo-tempoya-rules "npm run test:rules"
