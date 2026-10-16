@@ -120,7 +120,7 @@ service cloud.firestore {
           && request.resource.data.text is string
           && request.resource.data.text.size() > 0
           && request.resource.data.text.size() <= 5000
-          && request.resource.data.editCount == resource.data.editCount + 1
+          && request.resource.data.editCount == (resource.data.keys().hasAny(['editCount']) ? resource.data.editCount + 1 : 1)
           && request.resource.data.lastEditId is string
           && existsAfter(/databases/$(database)/documents/matches/$(matchId)/messages/$(messageId)/edits/$(request.resource.data.lastEditId))
           && getAfter(/databases/$(database)/documents/matches/$(matchId)/messages/$(messageId)/edits/$(request.resource.data.lastEditId)).data.editorId == request.auth.uid
