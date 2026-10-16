@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101a33">
+<title>TEMPOYA — One-Time Account Verification</title>
+<link rel="stylesheet" href="styles.css?v=20261016-verification">
+<script src="country-currency-config.js?v=20261016-verification" defer></script>
+<style>
+.verify-wrap{max-width:780px;margin:2rem auto;padding:1rem}.verify-card{background:#fff;color:#172033;border-radius:1.2rem;padding:clamp(1.2rem,4vw,2.2rem);box-shadow:0 12px 36px #0002}.verify-field{display:block;font-weight:600;margin:1.2rem 0}.verify-field select{box-sizing:border-box;width:100%;padding:.9rem;margin-top:.5rem;border:1px solid #cbd2df;border-radius:.6rem;background:#fff;color:#172033;font:inherit}.fee{font-size:clamp(2rem,7vw,3.2rem);font-weight:800;margin:.5rem 0}.verify-status{padding:1rem;border-radius:.7rem;background:#fff4e5;color:#754500;line-height:1.6}.verify-details{line-height:1.7;color:#465064}.verify-actions{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1.2rem}
+</style>
+</head>
+<body>
+<header class="site-header"><a class="logo" href="index.html">♡ TEMPOYA</a><nav><a href="index.html">Website Home</a><a href="profile.html">Your Profile</a></nav></header>
+<main class="verify-wrap"><section class="verify-card">
+<p class="eyebrow">ONE-TIME ACCOUNT VERIFICATION</p>
+<h1>One account. One verification fee.</h1>
+<p class="verify-details">Choose your country to see TEMPOYA's configured one-time verification amount in that country's local currency. This fee is separate from meeting bookings and app downloads.</p>
+<label class="verify-field" for="verify-country">Select your country
+<select id="verify-country"><option value="">Loading countries…</option></select>
+</label>
+<p class="verify-details">Currency: <strong id="verify-currency">—</strong> · Country code: <strong id="verify-code">—</strong></p>
+<p class="fee" id="verify-amount" aria-live="polite">—</p>
+<p><strong id="verify-frequency">One-time account verification fee</strong></p>
+<div class="verify-status" role="status" aria-live="polite">Display is ready for testing. Secure live payment is not yet confirmed as deployed, so this page will not collect money or mark an account verified.</div>
+<p class="verify-details">After the secure payment backend is configured and tested, the payment provider must confirm payment server-side before TEMPOYA marks an account verified. The same account must not be charged again after successful verification. Local taxes, provider minimums and country-specific rules must be checked before launch.</p>
+<div class="verify-actions"><a class="button primary" href="profile.html">Sign in / Open Profile</a><a class="button secondary" href="index.html#pricing">View Country Pricing</a></div>
+</section></main>
+<script>
+(function(){
+ function init(){
+  var select=document.getElementById("verify-country"),countries=window.TEMPOYA_COUNTRIES||[];
+  if(!select||!countries.length){select.innerHTML='<option value="">Country configuration could not load</option>';return;}
+  select.replaceChildren();
+  countries.forEach(function(c){var o=document.createElement("option");o.value=c.countryCode;o.textContent=c.country+" ("+c.currencyCode+")";select.appendChild(o);});
+  function render(){
+   var c=countries.find(function(x){return x.countryCode===select.value;});
+   if(!c)return;
+   document.getElementById("verify-currency").textContent=c.currencyCode;
+   document.getElementById("verify-code").textContent=c.countryCode;
+   document.getElementById("verify-amount").textContent=c.currencySymbol+" "+c.verificationFeeAmount;
+   document.getElementById("verify-frequency").textContent="One-time account verification fee ("+c.verificationFeeFrequency+")";
+  }
+  select.value="IN";select.addEventListener("change",render);render();
+ }
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+})();
+</script>
+</body>
+</html>
