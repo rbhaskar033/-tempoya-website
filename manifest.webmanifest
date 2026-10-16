@@ -8,6 +8,6 @@
   "background_color": "#080b25",
   "theme_color": "#080b25",
   "icons": [
-    { "src": "/assets/tempoya-app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+    { "src": "/assets/tempoya-apple-touch-icon.jpg", "sizes": "128x128", "type": "image/jpeg", "purpose": "any" }
   ]
 }
