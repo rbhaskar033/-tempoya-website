@@ -3,7 +3,7 @@ service firebase.storage {
   match /b/{bucket}/o {
     // Each signed-in user may upload/read only their own profile photo.
     match /profilePhotos/{userId}/{fileName} {
-      allow read: if request.auth != null && request.auth.uid == userId;
+      allow read: if request.auth != null && (request.auth.uid == userId || (firestore.get(/databases/(default)/documents/publicProfiles/$(userId)).data.discoverable == true));
       allow create, update: if request.auth != null
         && request.auth.uid == userId
         && request.resource.size <= 2 * 1024 * 1024
