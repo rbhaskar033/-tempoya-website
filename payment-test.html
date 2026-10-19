@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#0b1020">
+  <title>TEMPOYA — Razorpay Test Checkout</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <style>
+    main{max-width:720px;margin:3rem auto;padding:1.25rem}
+    .test-panel{border:1px solid #d7deeb;border-radius:1rem;padding:1.5rem;background:#fff}
+    #payment-status{margin-top:1rem;overflow-wrap:anywhere}
+    .warning{background:#fff5d9;border-left:4px solid #d99a00;padding:1rem;border-radius:.4rem}
+  </style>
+</head>
+<body>
+<header class="site-header"><a class="logo" href="index.html">♡ TEMPOYA</a></header>
+<main>
+  <div class="test-panel">
+    <p class="eyebrow">DEVELOPER TEST ONLY</p>
+    <h1>Razorpay checkout test</h1>
+    <p class="warning"><strong>Test mode only.</strong> This page creates a fixed ₹1 test order. Do not use it to collect real customer payments. Live booking/verification charges are not enabled.</p>
+    <p>Use Razorpay's test payment methods only. A successful signature check is not a booking confirmation and does not store payment status.</p>
+    <button class="button primary" id="tempoya-test-pay" type="button">Pay ₹1 test amount</button>
+    <p id="payment-status" role="status" aria-live="polite">Ready for test. Cloudflare Pages Functions and test credentials must be configured first.</p>
+  </div>
+</main>
+<script>
+(function () {
+  const button = document.getElementById("tempoya-test-pay");
+  const status = document.getElementById("payment-status");
+  function setStatus(message) { status.textContent = message; }
+  button.addEventListener("click", async function () {
+    button.disabled = true;
+    setStatus("Creating a ₹1 test order…");
+    try {
+      const orderResponse = await fetch("/api/create-order", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ planId: "test_payment" })
+      });
+      const order = await orderResponse.json().catch(() => ({}));
+      if (!orderResponse.ok) throw new Error(order.error || "Could not create Razorpay order.");
+      if (!window.Razorpay) throw new Error("Razorpay Checkout did not load. Check your connection and retry.");
+
+      const checkout = new Razorpay({
+        key: order.key_id,
+        amount: order.amount,
+        currency: order.currency,
+        name: "TEMPOYA",
+        description: "₹1 integration test — no real booking",
+        order_id: order.order_id,
+        handler: async function (response) {
+          setStatus("Verifying payment signature…");
+          try {
+            const verifyResponse = await fetch("/api/verify-payment", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify(response)
+            });
+            const verification = await verifyResponse.json().catch(() => ({}));
+            if (!verifyResponse.ok || !verification.verified) throw new Error(verification.error || "Signature verification failed.");
+            setStatus("TEST SUCCESS: signature verified. No booking or paid status was stored.");
+          } catch (error) {
+            setStatus("Verification failed: " + error.message);
+          } finally {
+            button.disabled = false;
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            setStatus("Checkout closed by user. No successful payment was verified.");
+            button.disabled = false;
+          }
+        },
+        theme: { color: "#2457d6" }
+      });
+      checkout.on("payment.failed", function (event) {
+        setStatus("Payment failed: " + (event?.error?.description || "Please retry using Razorpay test mode."));
+        button.disabled = false;
+      });
+      checkout.open();
+    } catch (error) {
+      setStatus("Could not start checkout: " + error.message);
+      button.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>
