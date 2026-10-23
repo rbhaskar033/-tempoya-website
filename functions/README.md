@@ -1,27 +1,30 @@
-# TEMPOYA one-time verification payment backend
+# TEMPOYA Firebase payment functions
 
-This folder contains Firebase Cloud Functions for a server-controlled Stripe Checkout flow.
+The profile page calls these Firebase callable functions in region `asia-south1`:
 
-## Important status
-- This is backend source code, not a live payment integration until deployed and configured.
-- No payment is collected by the static website yet.
-- A successful payment webhook marks the account as `payment_received_pending_review`; it does NOT automatically prove identity or grant a verified badge.
-- Amounts are nominal country-local amounts. Before enabling live charging, verify Stripe merchant eligibility, supported currencies, payment minimums, settlement rules, taxes, refunds/consumer rights, and country-specific requirements. Some local-currency minimums may make a one-unit fee impossible.
-- Stripe may not be available to every merchant or every cross-border flow. Do not advertise all 22 countries as live until tested.
-- Firestore rules must deny client writes to `verificationPayments` and to protected verification fields on `users`. Admin SDK Cloud Functions bypass Firestore rules.
-- Use test mode first; only enable live mode after end-to-end verification.
+- `createRazorpayVerificationOrder`
+- `verifyRazorpayVerificationPayment`
 
-## Deploy setup
-1. From the repository root, install Firebase CLI and run `firebase init functions` choosing JavaScript and Node 20. Keep existing website files.
-2. In the Firebase project console, confirm Blaze billing is enabled and Cloud Functions is available in the project region.
-3. In Stripe Dashboard, create a test-mode account and webhook endpoint for `stripeVerificationWebhook`. Subscribe to `checkout.session.completed` and `checkout.session.async_payment_succeeded`.
-4. Store secrets, never in Git:
-   `firebase functions:secrets:set STRIPE_SECRET_KEY`
-   `firebase functions:secrets:set STRIPE_WEBHOOK_SECRET`
-5. Deploy: `firebase deploy --only functions:createVerificationCheckout,functions:stripeVerificationWebhook`
-6. Enable App Check for the web app and configure allowed origins/domains.
-7. Add Firestore rules preventing clients from writing `verificationPayments/{uid}` and fields `verificationFeePaid`, `verificationFeePaidAt`, `verificationFeeCountry`, `verificationFeeCurrency`, `verificationStatus` on `users/{uid}`. Keep the user profile editable only for ordinary profile fields.
-8. Connect the website to call `createVerificationCheckout` only after the profile is saved; redirect to the returned `checkoutUrl`.
-9. Test duplicate clicks, parallel requests, abandoned sessions, successful payment, declined payment, webhook retries, changed country, and attempts to edit protected fields before enabling live payments.
+They are backend source code and are **not live until deployed and configured**. A successful payment sets `verificationStatus` to `payment_received_pending_review`; it does not prove identity or grant a verified badge.
 
-Never commit Stripe secret keys, webhook secrets, service-account credentials, or other private keys.
+## Required setup before deployment
+
+1. Confirm Firebase project ID is `tempoya`, billing is on the Blaze plan, and Cloud Functions / Secret Manager APIs are available.
+2. In the Razorpay Dashboard, use **Test Mode** first and create a test Key ID and matching Key Secret.
+3. In Firebase Secret Manager / Functions secrets, create these secrets:
+   - `RAZORPAY_KEY_ID`
+   - `RAZORPAY_KEY_SECRET`
+4. The GitHub Actions workflow `.github/workflows/deploy-firebase-functions.yml` deploys the two Razorpay functions. It requires a GitHub Actions repository secret named `FIREBASE_SERVICE_ACCOUNT` containing a Google Cloud service-account JSON credential authorized to deploy Firebase Functions in project `tempoya`. Prefer short-lived Workload Identity Federation if you have an administrator who can configure it; never commit credentials or paste them into chat.
+5. Open GitHub → repository → Actions → **Deploy TEMPOYA Firebase Payment Functions** and run it manually, or push a change to `functions/**` after the required credentials and Firebase secrets are configured.
+6. Configure Firebase App Check for the web app and ensure `app.tempoya.app` is an allowed/authenticated domain.
+7. Verify Firestore rules are published. Clients must not be able to write `verificationPayments/{uid}` or protected verification fields on `users/{uid}`.
+8. Test a complete Razorpay test checkout, server-side signature verification, declined payment, abandoned checkout, duplicate clicks, and replayed/incorrect payment details before enabling live mode.
+
+## Important limitations
+
+- The profile page uses Razorpay. The Stripe functions in `index.js` are a separate implementation and are not the checkout path used by the profile page.
+- The current Razorpay function verifies the checkout signature and then checks the payment with Razorpay for a matching captured payment. It is not a complete booking escrow/payment-hold/release system.
+- Country/currency entries are configured in code but provider eligibility, international payment support, minimum charges, taxes, refunds and local consumer requirements must be confirmed for each country. Do not claim all 22 countries are live until each has been tested.
+- A one-time fee is for account verification only. Identity review must remain a separate process.
+- Do not enable live charges until end-to-end tests and the applicable business, payment-provider, tax, refund and legal requirements are complete.
+- Never commit Razorpay or Stripe secret keys, webhook secrets, service-account credentials, or other private keys.
