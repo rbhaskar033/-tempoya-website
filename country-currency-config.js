@@ -33,28 +33,1434 @@ window.TEMPOYA_TARIFFS_INR = {
   Premium: [{duration:"15 min",amount:599},{duration:"30 min",amount:999},{duration:"1 hour",amount:1299},{duration:"2 hours",amount:1799},{duration:"3 hours",amount:2299}]
 };
 window.TEMPOYA_TARIFFS_BY_COUNTRY = {
-  "IN":{"Basic":[{"duration":"15 min","amount":99},{"duration":"30 min","amount":199},{"duration":"1 hour","amount":299},{"duration":"2 hours","amount":499},{"duration":"3 hours","amount":699}],"Standard":[{"duration":"15 min","amount":299},{"duration":"30 min","amount":499},{"duration":"1 hour","amount":699},{"duration":"2 hours","amount":999},{"duration":"3 hours","amount":1299}],"Premium":[{"duration":"15 min","amount":599},{"duration":"30 min","amount":999},{"duration":"1 hour","amount":1299},{"duration":"2 hours","amount":1799},{"duration":"3 hours","amount":2299}]},
-  "US":{"Basic":[{"duration":"15 min","amount":2.19},{"duration":"30 min","amount":4.4},{"duration":"1 hour","amount":6.61},{"duration":"2 hours","amount":11.04},{"duration":"3 hours","amount":15.46}],"Standard":[{"duration":"15 min","amount":4.59},{"duration":"30 min","amount":7.66},{"duration":"1 hour","amount":10.73},{"duration":"2 hours","amount":15.34},{"duration":"3 hours","amount":19.94}],"Premium":[{"duration":"15 min","amount":8.19},{"duration":"30 min","amount":13.66},{"duration":"1 hour","amount":17.76},{"duration":"2 hours","amount":24.6},{"duration":"3 hours","amount":31.43}]},
-  "CA":{"Basic":[{"duration":"15 min","amount":2.69},{"duration":"30 min","amount":5.41},{"duration":"1 hour","amount":8.12},{"duration":"2 hours","amount":13.56},{"duration":"3 hours","amount":18.99}],"Standard":[{"duration":"15 min","amount":6.09},{"duration":"30 min","amount":10.16},{"duration":"1 hour","amount":14.24},{"duration":"2 hours","amount":20.35},{"duration":"3 hours","amount":26.46}],"Premium":[{"duration":"15 min","amount":11.19},{"duration":"30 min","amount":18.66},{"duration":"1 hour","amount":24.27},{"duration":"2 hours","amount":33.61},{"duration":"3 hours","amount":42.95}]},
-  "GB":{"Basic":[{"duration":"15 min","amount":1.89},{"duration":"30 min","amount":3.8},{"duration":"1 hour","amount":5.71},{"duration":"2 hours","amount":9.53},{"duration":"3 hours","amount":13.34}],"Standard":[{"duration":"15 min","amount":3.69},{"duration":"30 min","amount":6.16},{"duration":"1 hour","amount":8.63},{"duration":"2 hours","amount":12.33},{"duration":"3 hours","amount":16.03}],"Premium":[{"duration":"15 min","amount":6.39},{"duration":"30 min","amount":10.66},{"duration":"1 hour","amount":13.86},{"duration":"2 hours","amount":19.19},{"duration":"3 hours","amount":24.53}]},
-  "AU":{"Basic":[{"duration":"15 min","amount":2.79},{"duration":"30 min","amount":5.61},{"duration":"1 hour","amount":8.43},{"duration":"2 hours","amount":14.06},{"duration":"3 hours","amount":19.7}],"Standard":[{"duration":"15 min","amount":6.49},{"duration":"30 min","amount":10.83},{"duration":"1 hour","amount":15.17},{"duration":"2 hours","amount":21.68},{"duration":"3 hours","amount":28.2}],"Premium":[{"duration":"15 min","amount":11.99},{"duration":"30 min","amount":20},{"duration":"1 hour","amount":26},{"duration":"2 hours","amount":36.01},{"duration":"3 hours","amount":46.02}]},
-  "NZ":{"Basic":[{"duration":"15 min","amount":2.99},{"duration":"30 min","amount":6.01},{"duration":"1 hour","amount":9.03},{"duration":"2 hours","amount":15.07},{"duration":"3 hours","amount":21.11}],"Standard":[{"duration":"15 min","amount":6.99},{"duration":"30 min","amount":11.67},{"duration":"1 hour","amount":16.34},{"duration":"2 hours","amount":23.35},{"duration":"3 hours","amount":30.37}],"Premium":[{"duration":"15 min","amount":12.99},{"duration":"30 min","amount":21.66},{"duration":"1 hour","amount":28.17},{"duration":"2 hours","amount":39.01},{"duration":"3 hours","amount":49.86}]},
-  "SG":{"Basic":[{"duration":"15 min","amount":2.59},{"duration":"30 min","amount":5.21},{"duration":"1 hour","amount":7.82},{"duration":"2 hours","amount":13.05},{"duration":"3 hours","amount":18.29}],"Standard":[{"duration":"15 min","amount":5.79},{"duration":"30 min","amount":9.66},{"duration":"1 hour","amount":13.54},{"duration":"2 hours","amount":19.35},{"duration":"3 hours","amount":25.15}],"Premium":[{"duration":"15 min","amount":10.59},{"duration":"30 min","amount":17.66},{"duration":"1 hour","amount":22.97},{"duration":"2 hours","amount":31.81},{"duration":"3 hours","amount":40.65}]},
-  "AE":{"Basic":[{"duration":"15 min","amount":5.49},{"duration":"30 min","amount":11.04},{"duration":"1 hour","amount":16.58},{"duration":"2 hours","amount":27.67},{"duration":"3 hours","amount":38.76}],"Standard":[{"duration":"15 min","amount":14.49},{"duration":"30 min","amount":24.18},{"duration":"1 hour","amount":33.87},{"duration":"2 hours","amount":48.41},{"duration":"3 hours","amount":62.95}],"Premium":[{"duration":"15 min","amount":27.99},{"duration":"30 min","amount":46.68},{"duration":"1 hour","amount":60.7},{"duration":"2 hours","amount":84.06},{"duration":"3 hours","amount":107.43}]},
-  "SA":{"Basic":[{"duration":"15 min","amount":5.49},{"duration":"30 min","amount":11.04},{"duration":"1 hour","amount":16.58},{"duration":"2 hours","amount":27.67},{"duration":"3 hours","amount":38.76}],"Standard":[{"duration":"15 min","amount":14.49},{"duration":"30 min","amount":24.18},{"duration":"1 hour","amount":33.87},{"duration":"2 hours","amount":48.41},{"duration":"3 hours","amount":62.95}],"Premium":[{"duration":"15 min","amount":27.99},{"duration":"30 min","amount":46.68},{"duration":"1 hour","amount":60.7},{"duration":"2 hours","amount":84.06},{"duration":"3 hours","amount":107.43}]},
-  "QA":{"Basic":[{"duration":"15 min","amount":5.49},{"duration":"30 min","amount":11.04},{"duration":"1 hour","amount":16.58},{"duration":"2 hours","amount":27.67},{"duration":"3 hours","amount":38.76}],"Standard":[{"duration":"15 min","amount":14.49},{"duration":"30 min","amount":24.18},{"duration":"1 hour","amount":33.87},{"duration":"2 hours","amount":48.41},{"duration":"3 hours","amount":62.95}],"Premium":[{"duration":"15 min","amount":27.99},{"duration":"30 min","amount":46.68},{"duration":"1 hour","amount":60.7},{"duration":"2 hours","amount":84.06},{"duration":"3 hours","amount":107.43}]},
-  "DE":{"Basic":[{"duration":"15 min","amount":2.09},{"duration":"30 min","amount":4.2},{"duration":"1 hour","amount":6.31},{"duration":"2 hours","amount":10.53},{"duration":"3 hours","amount":14.76}],"Standard":[{"duration":"15 min","amount":4.29},{"duration":"30 min","amount":7.16},{"duration":"1 hour","amount":10.03},{"duration":"2 hours","amount":14.33},{"duration":"3 hours","amount":18.64}],"Premium":[{"duration":"15 min","amount":7.59},{"duration":"30 min","amount":12.66},{"duration":"1 hour","amount":16.46},{"duration":"2 hours","amount":22.8},{"duration":"3 hours","amount":29.13}]},
-  "FR":{"Basic":[{"duration":"15 min","amount":2.09},{"duration":"30 min","amount":4.2},{"duration":"1 hour","amount":6.31},{"duration":"2 hours","amount":10.53},{"duration":"3 hours","amount":14.76}],"Standard":[{"duration":"15 min","amount":4.29},{"duration":"30 min","amount":7.16},{"duration":"1 hour","amount":10.03},{"duration":"2 hours","amount":14.33},{"duration":"3 hours","amount":18.64}],"Premium":[{"duration":"15 min","amount":7.59},{"duration":"30 min","amount":12.66},{"duration":"1 hour","amount":16.46},{"duration":"2 hours","amount":22.8},{"duration":"3 hours","amount":29.13}]},
-  "IT":{"Basic":[{"duration":"15 min","amount":2.09},{"duration":"30 min","amount":4.2},{"duration":"1 hour","amount":6.31},{"duration":"2 hours","amount":10.53},{"duration":"3 hours","amount":14.76}],"Standard":[{"duration":"15 min","amount":4.29},{"duration":"30 min","amount":7.16},{"duration":"1 hour","amount":10.03},{"duration":"2 hours","amount":14.33},{"duration":"3 hours","amount":18.64}],"Premium":[{"duration":"15 min","amount":7.59},{"duration":"30 min","amount":12.66},{"duration":"1 hour","amount":16.46},{"duration":"2 hours","amount":22.8},{"duration":"3 hours","amount":29.13}]},
-  "ES":{"Basic":[{"duration":"15 min","amount":2.09},{"duration":"30 min","amount":4.2},{"duration":"1 hour","amount":6.31},{"duration":"2 hours","amount":10.53},{"duration":"3 hours","amount":14.76}],"Standard":[{"duration":"15 min","amount":4.29},{"duration":"30 min","amount":7.16},{"duration":"1 hour","amount":10.03},{"duration":"2 hours","amount":14.33},{"duration":"3 hours","amount":18.64}],"Premium":[{"duration":"15 min","amount":7.59},{"duration":"30 min","amount":12.66},{"duration":"1 hour","amount":16.46},{"duration":"2 hours","amount":22.8},{"duration":"3 hours","amount":29.13}]},
-  "NL":{"Basic":[{"duration":"15 min","amount":2.09},{"duration":"30 min","amount":4.2},{"duration":"1 hour","amount":6.31},{"duration":"2 hours","amount":10.53},{"duration":"3 hours","amount":14.76}],"Standard":[{"duration":"15 min","amount":4.29},{"duration":"30 min","amount":7.16},{"duration":"1 hour","amount":10.03},{"duration":"2 hours","amount":14.33},{"duration":"3 hours","amount":18.64}],"Premium":[{"duration":"15 min","amount":7.59},{"duration":"30 min","amount":12.66},{"duration":"1 hour","amount":16.46},{"duration":"2 hours","amount":22.8},{"duration":"3 hours","amount":29.13}]},
-  "IE":{"Basic":[{"duration":"15 min","amount":2.09},{"duration":"30 min","amount":4.2},{"duration":"1 hour","amount":6.31},{"duration":"2 hours","amount":10.53},{"duration":"3 hours","amount":14.76}],"Standard":[{"duration":"15 min","amount":4.29},{"duration":"30 min","amount":7.16},{"duration":"1 hour","amount":10.03},{"duration":"2 hours","amount":14.33},{"duration":"3 hours","amount":18.64}],"Premium":[{"duration":"15 min","amount":7.59},{"duration":"30 min","amount":12.66},{"duration":"1 hour","amount":16.46},{"duration":"2 hours","amount":22.8},{"duration":"3 hours","amount":29.13}]},
-  "JP":{"Basic":[{"duration":"15 min","amount":180},{"duration":"30 min","amount":362},{"duration":"1 hour","amount":544},{"duration":"2 hours","amount":907},{"duration":"3 hours","amount":1271}],"Standard":[{"duration":"15 min","amount":540},{"duration":"30 min","amount":901},{"duration":"1 hour","amount":1262},{"duration":"2 hours","amount":1804},{"duration":"3 hours","amount":2346}],"Premium":[{"duration":"15 min","amount":1080},{"duration":"30 min","amount":1801},{"duration":"1 hour","amount":2342},{"duration":"2 hours","amount":3244},{"duration":"3 hours","amount":4145}]},
-  "KR":{"Basic":[{"duration":"15 min","amount":1651},{"duration":"30 min","amount":3319},{"duration":"1 hour","amount":4986},{"duration":"2 hours","amount":8322},{"duration":"3 hours","amount":11657}],"Standard":[{"duration":"15 min","amount":4981},{"duration":"30 min","amount":8313},{"duration":"1 hour","amount":11645},{"duration":"2 hours","amount":16642},{"duration":"3 hours","amount":21640}],"Premium":[{"duration":"15 min","amount":9981},{"duration":"30 min","amount":16646},{"duration":"1 hour","amount":21645},{"duration":"2 hours","amount":29976},{"duration":"3 hours","amount":38308}]},
-  "MY":{"Basic":[{"duration":"15 min","amount":6.49},{"duration":"30 min","amount":13.05},{"duration":"1 hour","amount":19.6},{"duration":"2 hours","amount":32.71},{"duration":"3 hours","amount":45.82}],"Standard":[{"duration":"15 min","amount":17.49},{"duration":"30 min","amount":29.19},{"duration":"1 hour","amount":40.89},{"duration":"2 hours","amount":58.44},{"duration":"3 hours","amount":75.98}],"Premium":[{"duration":"15 min","amount":33.99},{"duration":"30 min","amount":56.69},{"duration":"1 hour","amount":73.71},{"duration":"2 hours","amount":102.08},{"duration":"3 hours","amount":130.46}]},
-  "TH":{"Basic":[{"duration":"15 min","amount":43},{"duration":"30 min","amount":86.43},{"duration":"1 hour","amount":129.87},{"duration":"2 hours","amount":216.74},{"duration":"3 hours","amount":303.61}],"Standard":[{"duration":"15 min","amount":130},{"duration":"30 min","amount":216.96},{"duration":"1 hour","amount":303.91},{"duration":"2 hours","amount":434.35},{"duration":"3 hours","amount":564.78}],"Premium":[{"duration":"15 min","amount":260},{"duration":"30 min","amount":433.62},{"duration":"1 hour","amount":563.84},{"duration":"2 hours","amount":780.87},{"duration":"3 hours","amount":997.9}]},
-  "ID":{"Basic":[{"duration":"15 min","amount":19901},{"duration":"30 min","amount":40003},{"duration":"1 hour","amount":60105},{"duration":"2 hours","amount":100309},{"duration":"3 hours","amount":140513}],"Standard":[{"duration":"15 min","amount":59901},{"duration":"30 min","amount":99969},{"duration":"1 hour","amount":140036},{"duration":"2 hours","amount":200137},{"duration":"3 hours","amount":260239}],"Premium":[{"duration":"15 min","amount":119901},{"duration":"30 min","amount":199968},{"duration":"1 hour","amount":260019},{"duration":"2 hours","amount":360103},{"duration":"3 hours","amount":460188}]},
-  "PH":{"Basic":[{"duration":"15 min","amount":70},{"duration":"30 min","amount":140.71},{"duration":"1 hour","amount":211.41},{"duration":"2 hours","amount":352.83},{"duration":"3 hours","amount":494.24}],"Standard":[{"duration":"15 min","amount":210},{"duration":"30 min","amount":350.47},{"duration":"1 hour","amount":490.94},{"duration":"2 hours","amount":701.64},{"duration":"3 hours","amount":912.34}],"Premium":[{"duration":"15 min","amount":420},{"duration":"30 min","amount":700.47},{"duration":"1 hour","amount":910.82},{"duration":"2 hours","amount":1261.4},{"duration":"3 hours","amount":1611.99}]}
+  "US": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "CA": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "GB": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "AU": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "NZ": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "SG": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "AE": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "SA": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "QA": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "DE": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "FR": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "IT": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "ES": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "NL": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "IE": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "JP": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "KR": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "MY": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "TH": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "ID": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  },
+  "PH": {
+    "Basic": [
+      {
+        "duration": "15 min",
+        "amount": 3
+      },
+      {
+        "duration": "30 min",
+        "amount": 5
+      },
+      {
+        "duration": "1 hour",
+        "amount": 7
+      },
+      {
+        "duration": "2 hours",
+        "amount": 9
+      },
+      {
+        "duration": "3 hours",
+        "amount": 11
+      }
+    ],
+    "Standard": [
+      {
+        "duration": "15 min",
+        "amount": 6
+      },
+      {
+        "duration": "30 min",
+        "amount": 8
+      },
+      {
+        "duration": "1 hour",
+        "amount": 10
+      },
+      {
+        "duration": "2 hours",
+        "amount": 12
+      },
+      {
+        "duration": "3 hours",
+        "amount": 14
+      }
+    ],
+    "Premium": [
+      {
+        "duration": "15 min",
+        "amount": 9
+      },
+      {
+        "duration": "30 min",
+        "amount": 10
+      },
+      {
+        "duration": "1 hour",
+        "amount": 12
+      },
+      {
+        "duration": "2 hours",
+        "amount": 14
+      },
+      {
+        "duration": "3 hours",
+        "amount": 16
+      }
+    ]
+  }
 };
 // Backwards-compatible alias for any existing India-only consumer.
 window.TEMPOYA_TARIFFS = window.TEMPOYA_TARIFFS_INR;
