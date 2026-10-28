@@ -131,21 +131,21 @@
         var heading = document.createElement('h3');
         heading.textContent = tier;
         card.appendChild(heading);
+        window.TEMPOYA_TARIFFS[tier].forEach(function (item) {
+          var p = document.createElement('p');
+          var label = document.createElement('span');
+          label.textContent = item.duration + ' ';
+          var price = document.createElement('strong');
+          price.textContent = country.currencySymbol + item.amount.toLocaleString('en-IN') + ' ' + country.currencyCode;
+          p.appendChild(label);
+          p.appendChild(price);
+          card.appendChild(p);
+        });
         if (country.countryCode !== 'IN') {
           var note = document.createElement('p');
-          note.textContent = 'Local price to be confirmed before launch.';
+          note.className = 'small-note';
+          note.textContent = 'Configured nominal tariff amount shown in this country’s local currency. Confirm local pricing, taxes and payment-provider availability before accepting payments.';
           card.appendChild(note);
-        } else {
-          window.TEMPOYA_TARIFFS[tier].forEach(function (item) {
-            var p = document.createElement('p');
-            var label = document.createElement('span');
-            label.textContent = item.duration + ' ';
-            var price = document.createElement('strong');
-            price.textContent = country.currencySymbol + item.amount.toLocaleString('en-IN') + ' ' + country.currencyCode;
-            p.appendChild(label);
-            p.appendChild(price);
-            card.appendChild(p);
-          });
         }
         grid.appendChild(card);
       });
