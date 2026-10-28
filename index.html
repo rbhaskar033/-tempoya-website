@@ -125,30 +125,39 @@
       document.getElementById('tempoya-currency-symbol').textContent = country.currencySymbol;
       document.getElementById('tempoya-verification-fee').textContent = country.currencySymbol + country.verificationFeeAmount + ' (one-time)';
       grid.replaceChildren();
-      Object.keys(window.TEMPOYA_TARIFFS).forEach(function (tier) {
+      var tariffsByCountry = window.TEMPOYA_TARIFFS_BY_COUNTRY || {};
+      var countryTariffs = tariffsByCountry[country.countryCode];
+      Object.keys(window.TEMPOYA_TARIFFS_INR || window.TEMPOYA_TARIFFS).forEach(function (tier) {
+        var items = countryTariffs && countryTariffs[tier];
         var card = document.createElement('article');
         card.className = 'price-card';
         var heading = document.createElement('h3');
         heading.textContent = tier;
         card.appendChild(heading);
-        window.TEMPOYA_TARIFFS[tier].forEach(function (item) {
-          var p = document.createElement('p');
-          var label = document.createElement('span');
-          label.textContent = item.duration + ' ';
-          var price = document.createElement('strong');
-          price.textContent = country.currencySymbol + item.amount.toLocaleString('en-IN') + ' ' + country.currencyCode;
-          p.appendChild(label);
-          p.appendChild(price);
-          card.appendChild(p);
-        });
+        if (!items || !items.length) {
+          var note = document.createElement('p');
+          note.textContent = 'Pricing configuration unavailable. Please try again later.';
+          card.appendChild(note);
+        } else {
+          items.forEach(function (item) {
+            var p = document.createElement('p');
+            var label = document.createElement('span');
+            label.textContent = item.duration + ' ';
+            var price = document.createElement('strong');
+            price.textContent = country.currencySymbol + item.amount.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 2}) + ' ' + country.currencyCode;
+            p.appendChild(label);
+            p.appendChild(price);
+            card.appendChild(p);
+          });
+        }
         if (country.countryCode !== 'IN') {
           var note = document.createElement('p');
           note.className = 'small-note';
-          note.textContent = 'Configured nominal tariff amount shown in this country’s local currency. Confirm local pricing, taxes and payment-provider availability before accepting payments.';
+          note.textContent = 'Configured local-currency prices are a preview; confirm taxes, payment support and local requirements before accepting payments.';
           card.appendChild(note);
         }
         grid.appendChild(card);
-      });
+      });;
     }
     select.value = 'IN';
     select.addEventListener('change', render);
