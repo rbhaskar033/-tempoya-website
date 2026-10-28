@@ -126,7 +126,9 @@
       document.getElementById('tempoya-verification-fee').textContent = country.currencySymbol + country.verificationFeeAmount + ' (one-time)';
       grid.replaceChildren();
       var tariffsByCountry = window.TEMPOYA_TARIFFS_BY_COUNTRY || {};
-      var countryTariffs = tariffsByCountry[country.countryCode];
+      var countryTariffs = country.countryCode === 'IN'
+        ? (window.TEMPOYA_TARIFFS_INR || window.TEMPOYA_TARIFFS)
+        : tariffsByCountry[country.countryCode];
       Object.keys(window.TEMPOYA_TARIFFS_INR || window.TEMPOYA_TARIFFS).forEach(function (tier) {
         var items = countryTariffs && countryTariffs[tier];
         var card = document.createElement('article');
@@ -135,9 +137,9 @@
         heading.textContent = tier;
         card.appendChild(heading);
         if (!items || !items.length) {
-          var note = document.createElement('p');
-          note.textContent = 'Pricing configuration unavailable. Please try again later.';
-          card.appendChild(note);
+          var unavailable = document.createElement('p');
+          unavailable.textContent = 'Pricing configuration unavailable. Please try again later.';
+          card.appendChild(unavailable);
         } else {
           items.forEach(function (item) {
             var p = document.createElement('p');
@@ -153,7 +155,7 @@
         if (country.countryCode !== 'IN') {
           var note = document.createElement('p');
           note.className = 'small-note';
-          note.textContent = 'Configured local-currency prices are a preview; confirm taxes, payment support and local requirements before accepting payments.';
+          note.textContent = 'Configured tariff values are shown in the selected currency as requested. Confirm local taxes, payment-provider support and legal requirements before accepting payments.';
           card.appendChild(note);
         }
         grid.appendChild(card);
