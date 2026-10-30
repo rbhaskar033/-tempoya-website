@@ -44,7 +44,7 @@ async function razorpayRequest(path, options = {}) {
 }
 
 exports.createRazorpayVerificationOrder = onCall(
-  { region:"asia-south1", secrets:[RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET], enforceAppCheck:true },
+  { region:"asia-south1", invoker:"public", secrets:[RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET], enforceAppCheck:true },
   async request => {
     const uid = requireAuth(request);
     const countryCode = String(request.data?.countryCode || "").toUpperCase();
@@ -89,7 +89,7 @@ exports.createRazorpayVerificationOrder = onCall(
 );
 
 exports.verifyRazorpayVerificationPayment = onCall(
-  { region:"asia-south1", secrets:[RAZORPAY_KEY_ID,RAZORPAY_KEY_SECRET], enforceAppCheck:true },
+  { region:"asia-south1", invoker:"public", secrets:[RAZORPAY_KEY_ID,RAZORPAY_KEY_SECRET], enforceAppCheck:true },
   async request => {
     const uid=requireAuth(request);
     const orderId=String(request.data?.razorpay_order_id||"");
