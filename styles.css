@@ -546,3 +546,60 @@ a:focus-visible, summary:focus-visible, button:focus-visible, input:focus-visibl
   #tempoya-phone-form { width: 100%; }
   #tempoya-phone-form button { width: 100%; }
 }
+\n
+/* TEMPOYA responsive refresh — 31 Oct 2026 */
+:root { color-scheme: dark; }
+body { background:#101a33; color:#f7f8fc; }
+.site-header { background:rgba(16,26,51,.97); border-bottom:1px solid rgba(145,169,211,.28); }
+.logo { font-size:clamp(23px,2.2vw,30px); letter-spacing:.2px; }
+nav { gap:clamp(12px,1.7vw,24px); }
+nav a { font-size:15px; }
+.hero { min-height:650px; padding:88px 0 72px; gap:48px; }
+.hero h1 { letter-spacing:-2.6px; }
+.hero p:not(.eyebrow):not(.small-note) { color:#c7d0e2; line-height:1.75; }
+.button { min-height:52px; padding:14px 25px; }
+.button.primary,.nav-button { background:#ed238d; }
+.button.secondary { border:2px solid #86a7df; background:#203252; }
+.hero-card { border-radius:28px; border-color:#627ba7; }
+.features { background:#172541; border-color:#34496c; }
+.journey-section { width:min(1100px,92%); margin:0 auto; padding:72px 0 30px; }
+.journey-heading { max-width:760px; margin-bottom:30px; }
+.journey-heading h2 { font-size:clamp(32px,5vw,52px); line-height:1.12; margin-bottom:14px; }
+.journey-heading>p:last-child { color:#bac6dc; }
+.journey-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
+.journey-card { display:flex; flex-direction:column; min-height:220px; padding:25px; border-radius:22px; background:linear-gradient(145deg,#1b2c4c,#14213b); border:1px solid #40577e; transition:transform .2s,border-color .2s; }
+.journey-card:hover { transform:translateY(-4px); border-color:#ed238d; }
+.journey-card span { color:#ff62b0; font-weight:900; letter-spacing:2px; }
+.journey-card h3 { margin:12px 0 8px; font-size:22px; }
+.journey-card p { color:#bac6dc; margin-bottom:18px; }
+.journey-card b { color:#ff70b9; margin-top:auto; }
+.menu-toggle { display:none; }
+@media(max-width:900px) {
+ .site-header { min-height:76px; padding:16px 5%; display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; }
+ .menu-toggle { display:inline-flex; align-items:center; justify-content:center; width:48px; height:44px; border:1px solid #607da9; border-radius:12px; background:#203252; color:white; font-size:24px; cursor:pointer; }
+ .site-header nav { display:none; flex:0 0 100%; flex-direction:column; align-items:stretch; gap:6px; padding:10px 0 4px; }
+ .site-header nav.is-open { display:flex; }
+ .site-header nav a { display:block; padding:12px 14px; border-radius:10px; font-size:16px; }
+ .site-header nav .nav-button { text-align:center; margin-top:4px; }
+ .hero { width:90%; min-height:0; grid-template-columns:1fr; padding:62px 0 50px; gap:34px; }
+ .hero h1 { font-size:clamp(43px,10vw,66px); letter-spacing:-1.8px; }
+ .hero p:not(.eyebrow):not(.small-note) { font-size:17px; }
+ .hero-card { max-width:680px; margin:0 auto; }
+ .features { grid-template-columns:repeat(2,minmax(0,1fr)); margin-bottom:34px; }
+ .steps { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .journey-grid { grid-template-columns:1fr; }
+ .journey-card { min-height:180px; }
+ .section { padding:62px 0; }
+}
+@media(max-width:480px) {
+ .site-header { padding:15px 5%; }
+ .hero { padding-top:54px; }
+ .hero h1 { font-size:clamp(42px,11vw,54px); line-height:1.05; }
+ .hero-buttons { display:grid; grid-template-columns:1fr; }
+ .hero-buttons .button { text-align:center; width:100%; }
+ .features { padding:12px; gap:6px; }
+ .features b { padding:12px 5px; font-size:12px; }
+ .steps { grid-template-columns:1fr; }
+ .section h2,.download h2 { font-size:35px; }
+ .journey-section { padding-top:48px; }
+}
