@@ -128,3 +128,126 @@ exports.verifyRazorpayVerificationPayment = onCall(
     return {verified:true,alreadyPaid:false};
   }
 );
+
+// Booking checkout uses the server-side final tariff table; clients cannot choose an amount.
+// Captured payments are recorded as paid. This is NOT escrow, split settlement or a hold/release service.
+const BOOKING_COUNTRY_CODES = {
+  "India":"IN","United States":"US","Canada":"CA","United Kingdom":"GB","Australia":"AU",
+  "New Zealand":"NZ","Singapore":"SG","United Arab Emirates":"AE","Saudi Arabia":"SA","Qatar":"QA",
+  "Germany":"DE","France":"FR","Italy":"IT","Spain":"ES","Netherlands":"NL","Ireland":"IE",
+  "Japan":"JP","South Korea":"KR","Malaysia":"MY","Thailand":"TH","Indonesia":"ID","Philippines":"PH"
+};
+const BOOKING_CURRENCIES = {
+  IN:"INR",US:"USD",CA:"CAD",GB:"GBP",AU:"AUD",NZ:"NZD",SG:"SGD",AE:"AED",SA:"SAR",QA:"QAR",
+  DE:"EUR",FR:"EUR",IT:"EUR",ES:"EUR",NL:"EUR",IE:"EUR",JP:"JPY",KR:"KRW",MY:"MYR",TH:"THB",ID:"IDR",PH:"PHP"
+};
+const BOOKING_TARIFFS = {
+  IN:{
+    Basic:{"15":99,"30":199,"60":299,"120":499,"180":699},
+    Standard:{"15":299,"30":499,"60":699,"120":999,"180":1299},
+    Premium:{"15":599,"30":999,"60":1299,"120":1799,"180":2299}
+  },
+  INTERNATIONAL:{
+    Basic:{"15":3,"30":5,"60":7,"120":9,"180":11},
+    Standard:{"15":6,"30":8,"60":10,"120":12,"180":14},
+    Premium:{"15":9,"30":10,"60":12,"120":14,"180":16}
+  }
+};
+const ZERO_DECIMAL_CURRENCIES = new Set(["JPY","KRW","IDR"]);
+function bookingMinorUnits(amount,currency) {
+  return Math.round(amount * (ZERO_DECIMAL_CURRENCIES.has(currency) ? 1 : 100));
+}
+
+exports.createRazorpayBookingOrder = onCall(
+  { region:"asia-south1", invoker:"public", secrets:[RAZORPAY_KEY_ID,RAZORPAY_KEY_SECRET], enforceAppCheck:true },
+  async request => {
+    const uid=requireAuth(request);
+    const bookingId=String(request.data?.bookingId||"").trim();
+    const tier=String(request.data?.tier||"");
+    if(!bookingId || bookingId.length>150 || !["Basic","Standard","Premium"].includes(tier))
+      throw new HttpsError("invalid-argument","Choose a valid booking and tariff tier.");
+    const bookingRef=db.doc("bookings/"+bookingId);
+    const bookingSnap=await bookingRef.get();
+    if(!bookingSnap.exists) throw new HttpsError("not-found","Booking not found.");
+    const booking=bookingSnap.data();
+    if(booking.requesterId!==uid || !Array.isArray(booking.members) || !booking.members.includes(uid))
+      throw new HttpsError("permission-denied","Only the booking requester can pay.");
+    if(booking.status!=="accepted") throw new HttpsError("failed-precondition","Both people must accept the booking before payment.");
+    if(![15,30,60,120,180].includes(booking.durationMinutes))
+      throw new HttpsError("failed-precondition","Booking duration is invalid.");
+    const userSnap=await db.doc("users/"+uid).get();
+    if(!userSnap.exists) throw new HttpsError("failed-precondition","Save your profile first.");
+    const countryCode=BOOKING_COUNTRY_CODES[String(userSnap.data().country||"")];
+    const currency=BOOKING_CURRENCIES[countryCode];
+    if(!countryCode||!currency) throw new HttpsError("failed-precondition","Your saved profile country is not supported.");
+    const table=countryCode==="IN"?BOOKING_TARIFFS.IN:BOOKING_TARIFFS.INTERNATIONAL;
+    const majorAmount=table[tier][String(booking.durationMinutes)];
+    const amount=bookingMinorUnits(majorAmount,currency);
+    const paymentRef=db.doc("bookingPayments/"+bookingId);
+    const existing=await paymentRef.get();
+    if(existing.exists && existing.data().status==="paid")
+      throw new HttpsError("already-exists","This booking has already been paid.");
+    if(existing.exists && ["creating","pending"].includes(existing.data().status) &&
+       existing.data().createdAt?.toMillis?.()>Date.now()-30*60*1000)
+      throw new HttpsError("aborted","A payment attempt is already pending. Check payment status before retrying.");
+    const attemptId=crypto.randomUUID();
+    await paymentRef.set({uid,bookingId,countryCode,currency,amount,tier,durationMinutes:booking.durationMinutes,
+      status:"creating",provider:"razorpay",purpose:"booking",attemptId,createdAt:Timestamp.now()});
+    try {
+      const order=await razorpayRequest("/orders",{method:"POST",body:JSON.stringify({
+        amount,currency,receipt:"tb_"+bookingId.slice(0,18)+"_"+attemptId.slice(0,8),
+        notes:{uid,bookingId,countryCode,tier,durationMinutes:String(booking.durationMinutes),attemptId,purpose:"booking"}
+      })});
+      await paymentRef.set({status:"pending",razorpayOrderId:order.id,updatedAt:Timestamp.now()},{merge:true});
+      return {keyId:RAZORPAY_KEY_ID.value(),orderId:order.id,amount,currency,
+        businessName:"TEMPOYA",description:tier+" meeting booking ("+booking.durationMinutes+" min)"};
+    } catch(error) {
+      await paymentRef.set({status:"checkout_creation_failed",updatedAt:Timestamp.now()},{merge:true});
+      if(error instanceof HttpsError) throw error;
+      console.error("Razorpay booking order failed",error.message);
+      throw new HttpsError("internal","Could not create the booking payment.");
+    }
+  }
+);
+
+exports.verifyRazorpayBookingPayment = onCall(
+  { region:"asia-south1", invoker:"public", secrets:[RAZORPAY_KEY_ID,RAZORPAY_KEY_SECRET], enforceAppCheck:true },
+  async request => {
+    const uid=requireAuth(request);
+    const orderId=String(request.data?.razorpay_order_id||"");
+    const paymentId=String(request.data?.razorpay_payment_id||"");
+    const signature=String(request.data?.razorpay_signature||"");
+    const bookingId=String(request.data?.bookingId||"");
+    if(!orderId||!paymentId||!signature||!bookingId)
+      throw new HttpsError("invalid-argument","Missing booking payment details.");
+    const expected=crypto.createHmac("sha256",RAZORPAY_KEY_SECRET.value()).update(orderId+"|"+paymentId).digest("hex");
+    const a=Buffer.from(expected),b=Buffer.from(signature);
+    if(a.length!==b.length||!crypto.timingSafeEqual(a,b))
+      throw new HttpsError("permission-denied","Payment signature is invalid.");
+    const paymentRef=db.doc("bookingPayments/"+bookingId),bookingRef=db.doc("bookings/"+bookingId);
+    const [pSnap,bSnap]=await Promise.all([paymentRef.get(),bookingRef.get()]);
+    if(!pSnap.exists||!bSnap.exists) throw new HttpsError("not-found","Booking payment record not found.");
+    const p=pSnap.data(),booking=bSnap.data();
+    if(p.uid!==uid||p.bookingId!==bookingId||p.razorpayOrderId!==orderId||p.purpose!=="booking"||
+       booking.requesterId!==uid||booking.status!=="accepted")
+      throw new HttpsError("permission-denied","Payment does not match this accepted booking.");
+    if(p.status==="paid") return {paid:true,alreadyPaid:true};
+    const payment=await razorpayRequest("/payments/"+encodeURIComponent(paymentId));
+    if(payment.order_id!==orderId||payment.status!=="captured"||payment.amount!==p.amount||
+       String(payment.currency).toUpperCase()!==String(p.currency).toUpperCase())
+      throw new HttpsError("failed-precondition","Razorpay has not confirmed a captured payment matching this booking.");
+    await db.runTransaction(async tx=>{
+      const [freshP,freshB]=await Promise.all([tx.get(paymentRef),tx.get(bookingRef)]);
+      if(!freshP.exists||!freshB.exists) throw new HttpsError("not-found","Booking payment record not found.");
+      const fp=freshP.data(),fb=freshB.data();
+      if(fp.status==="paid") return;
+      if(fp.razorpayOrderId!==orderId||fp.attemptId!==p.attemptId||fb.requesterId!==uid||fb.status!=="accepted")
+        throw new HttpsError("aborted","Booking or payment attempt changed. Contact support before retrying.");
+      tx.set(paymentRef,{status:"paid",razorpayPaymentId:paymentId,paidAt:Timestamp.now(),updatedAt:Timestamp.now()},{merge:true});
+      tx.set(bookingRef,{paymentStatus:"paid",paymentProvider:"razorpay",paymentCurrency:fp.currency,
+        paymentAmount:fp.amount,paymentTier:fp.tier,paidAt:Timestamp.now(),updatedAt:FieldValue.serverTimestamp()},{merge:true});
+    });
+    return {paid:true,alreadyPaid:false};
+  }
+);
+
