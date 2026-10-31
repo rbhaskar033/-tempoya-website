@@ -9,6 +9,10 @@
 <title>TEMPOYA — Your Profile</title><link rel="stylesheet" href="styles.css?v=20261014e">
 <style>
 .account-wrap{max-width:820px;margin:2rem auto;padding:1rem}.account-panel{background:#fff;color:#172033;border-radius:1.2rem;padding:clamp(1rem,4vw,2.25rem);box-shadow:0 12px 36px #0002}.account-status{padding:.9rem 1rem;border-radius:.75rem;background:#eef2ff;color:#23315c;margin:1rem 0;line-height:1.5}.success{background:#e8f5e9;color:#1b5e20}.error{background:#ffebee;color:#8a1c1c}.profile-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.profile-form label{display:block;font-weight:600}.profile-form input,.profile-form select{box-sizing:border-box;display:block;width:100%;padding:.8rem;margin-top:.4rem;border:1px solid #cbd2df;border-radius:.6rem;background:#fff;color:#172033;font:inherit}.full{grid-column:1/-1}.photo-row{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}#photo-preview{width:100px;height:100px;border-radius:50%;object-fit:cover;background:#edf0f6;border:1px solid #ccd2df}.account-actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.4rem}.account-note{color:#465064;line-height:1.6;font-size:.92rem}@media(max-width:560px){.profile-form{grid-template-columns:1fr}.full{grid-column:auto}}
+</style><style>
+.payment-method-panel{margin:1rem 0;padding:1rem;border:1px solid #cbd5e1;border-radius:.9rem;background:#f8faff;color:#172033}
+.payment-method-chips{display:flex;flex-wrap:wrap;gap:.5rem;margin:.4rem 0 .8rem}
+.payment-method-chip{display:inline-flex;align-items:center;padding:.45rem .7rem;border-radius:999px;background:#e8eefb;border:1px solid #c9d7f0;color:#1d3153;font-size:.88rem}
 </style></head>
 <body>
 <header class="site-header"><a class="logo" href="index.html">♡ TEMPOYA</a><nav><a href="index.html">Website Home</a></nav></header>
@@ -29,12 +33,14 @@
 </form><section id="verification-next-step" class="account-status" hidden>
 <strong>Next step: One-time account verification</strong>
 <p id="verification-fee-summary">Save your profile first to view the planned verification fee.</p>
+<div id="verification-payment-methods" class="payment-method-panel" hidden><strong id="payment-method-title">Payment methods for your country</strong><div id="payment-method-list"></div><p class="account-note">These are locally relevant methods requested for support. The payment window will display only methods enabled for TEMPOYA by the payment provider. Listing a method here does not mean it is activated.</p></div>
 <p class="account-note">This fee is for account verification only and is intended to be charged once per account. It is non-refundable except where applicable law requires otherwise. Live checkout works only after the secure payment functions and provider secrets are deployed.</p><button id="pay-verification" class="button primary" type="button">Check Secure Verification Payment</button><a class="button secondary" href="verification-fee.html" style="display:inline-block;margin-left:.5rem">View 22-Country Fee</a><p id="payment-status" class="account-note" role="status" aria-live="polite">Payment setup status will appear here. Do not retry or pay unless secure checkout is confirmed active.</p><p class="account-note">You can continue to the early discovery preview without making a payment. Matching, chat and booking are prototype features and must be tested before launch.</p><a id="continue-connect" class="button secondary" href="connect.html" style="display:inline-block;margin-top:.5rem">Continue to Discover &amp; Connect Preview</a>
 </section>
 <p id="signedout" hidden><a class="button secondary" href="index.html#account">Return to Sign In</a></p>
 </section></main>
 <script src="country-currency-config.js"></script>
 <script src="language-config.js"></script>
+<script src="payment-methods-config.js"></script>
 <script>
 (function(){const c=window.TEMPOYA_LANGUAGE_CONFIG;if(!c)return;const country=document.getElementById("country"),state=document.getElementById("state"),sf=document.getElementById("state-field"),lang=document.getElementById("language");function setLang(codes,old){lang.replaceChildren();codes.forEach(k=>lang.add(new Option(c.labels[k]||k,k)));lang.value=codes.includes(old)?old:(codes.includes("en")?"en":codes[0]);}function update(){const old=lang.value;if(country.value==="India"){sf.hidden=false;state.required=true;if(!state.options.length||state.options.length===1)Object.keys(c.indianStates).forEach(n=>state.add(new Option(n,n)));setLang([...new Set(["en","hi",...(c.indianStates[state.value]||[])])],old);}else{sf.hidden=true;state.required=false;state.value="";setLang(c.countries[country.value]||["en"],old);}}country.addEventListener("change",update);state.addEventListener("change",update);update();window.TEMPOYA_LANGUAGE_FORM={state:()=>state.value};})();
 </script>
@@ -72,6 +78,22 @@ $("pay-verification").hidden=!profileSaved;
 summary.textContent=c
 ? "Profile saved. Planned one-time account verification fee: "+c.currencySymbol+c.verificationFeeAmount+" "+c.currencyCode+"."
 : "Profile saved. Choose a supported country and save your profile to view the planned fee.";
+const panel=$("verification-payment-methods"), list=$("payment-method-list"), title=$("payment-method-title");
+const catalog=window.TEMPOYA_PAYMENT_METHODS||{};
+const config=c&&catalog[c.countryCode];
+if(panel&&list&&title){
+  panel.hidden=!config;
+  list.replaceChildren();
+  if(config){
+    title.textContent=config.title;
+    config.groups.forEach(group=>{
+      const heading=document.createElement("p");heading.className="account-note";heading.style.fontWeight="700";heading.textContent=group.name;list.appendChild(heading);
+      const row=document.createElement("div");row.className="payment-method-chips";
+      group.items.forEach(item=>{const chip=document.createElement("span");chip.className="payment-method-chip";chip.textContent=item;row.appendChild(chip);});
+      list.appendChild(row);
+    });
+  }
+}
 }
 function fill(d={}){$("displayName").value=d.displayName||"";$("age").value=d.age??"";$("country").value=d.country||"";document.getElementById("country").dispatchEvent(new Event("change"));if(d.state){$("state").value=d.state;$("state").dispatchEvent(new Event("change"));}$("language").value=d.preferredLanguage||"en";$("gender").value=(["woman","man","non_binary","self_described"].includes(d.gender)?d.gender:"");photoURL=d.photoURL||"";if(photoURL)$("photo-preview").src=photoURL;showVerificationNextStep(d.country||"")}
 async function load(){if(!user)return;lock(true);try{const s=await getDoc(userDoc());profileSaved=s.exists() && !!s.data().displayName && Number.isInteger(s.data().age) && s.data().age>=18 && !!s.data().country && ["woman","man","non_binary","self_described"].includes(s.data().gender);fill(s.exists()?s.data():{});showVerificationNextStep(profileSaved?s.data().country:"");say(s.exists()?"Saved profile loaded from Firestore.":"No saved profile yet. Enter your details and tap Save Profile.")}catch(e){console.error(e);say("Could not read Firestore. Check Firestore is enabled and its rules permit this signed-in user to read users/{uid}. Error: "+(e.code||e.message),"error")}finally{lock(false)}}
