@@ -25,7 +25,7 @@ jobs:
           root = Path(".")
           required = [
               "index.html", "profile.html", "styles.css", "auth.js",
-              "firebase-config.js", "country-currency-config.js",
+              "firebase-config.js", "country-currency-config.js", "payment-methods-config.js",
               "privacy-policy.html", "terms.html",
               "community-guidelines.html", "support.html",
               "firestore.rules", "storage.rules"
@@ -39,6 +39,19 @@ jobs:
           codes = re.findall(r'countryCode:"([A-Z]{2})"', config)
           if len(codes) != 22 or len(set(codes)) != 22:
               print(f"FAIL: expected 22 unique country codes; found {len(codes)} entries / {len(set(codes))} unique")
+              sys.exit(1)
+
+          payment_methods = (root / "payment-methods-config.js").read_text()
+          profile_for_payments = (root / "profile.html").read_text()
+          method_codes = re.findall(r"^  ([A-Z]{2}):\\{title:", payment_methods, re.M)
+          if len(method_codes) != 22 or len(set(method_codes)) != 22:
+              print(f"FAIL: expected payment method catalogue for 22 countries; found {len(method_codes)} entries / {len(set(method_codes))} unique")
+              sys.exit(1)
+          if not all(term in payment_methods for term in ["PhonePe", "Google Pay", "Paytm", "Credit card", "Debit card"]):
+              print("FAIL: India payment methods are incomplete")
+              sys.exit(1)
+          if 'src="payment-methods-config.js"' not in profile_for_payments or 'id="verification-payment-methods"' not in profile_for_payments:
+              print("FAIL: country payment methods are not connected to the verification screen")
               sys.exit(1)
 
           profile = (root / "profile.html").read_text()
@@ -65,6 +78,7 @@ jobs:
 
           print("PASS: required pages and rules files exist")
           print("PASS: 22 unique country codes configured")
+          print("PASS: 22-country payment method catalogue linked to account verification; provider activation clearly gated")
           print("PASS: profile load/save/reload/sign-out/auth-state/photo code present")
           print("PASS: no obvious public Firestore rule; owner check present")
           print("NOTE: this is a static audit, not a live Firebase/OTP/payment or browser end-to-end test.")
