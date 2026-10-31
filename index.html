@@ -20,14 +20,11 @@
 <body>
 <header class="site-header">
   <a class="logo" href="#home" aria-label="TEMPOYA home">♡ TEMPOYA</a>
-  <nav aria-label="Main navigation">
-    <a href="#how">How It Works</a>
-    <a href="#safety">Safety</a>
-    <a href="#pricing">Pricing</a>
-    <a href="verification-fee.html">Account Verification</a>
-    <a href="#faq">FAQ</a>
-    <a class="nav-button" href="connect.html">Try Connect</a>
-    <a class="nav-button" href="#download">App Updates</a>
+  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open navigation">☰</button>
+  <nav id="primary-navigation" aria-label="Main navigation">
+    <a href="#how">How It Works</a><a href="#safety">Safety</a><a href="#pricing">Pricing</a>
+    <a href="verification-fee.html">Account Verification</a><a href="#faq">FAQ</a>
+    <a class="nav-button" href="connect.html">Try Connect</a><a class="nav-button" href="#download">App Updates</a>
   </nav>
 </header>
 <main>
@@ -53,6 +50,14 @@
   <b>📍 Public Places</b>
   <b>⏱️ Meeting Timer</b>
   <b>🆘 Safety Features</b>
+</section>
+<section class="journey-section" aria-labelledby="journey-title">
+  <div class="journey-heading"><p class="eyebrow">THE TEMPOYA EXPERIENCE</p><h2 id="journey-title">A clearer path from discovery to a safer meet-up.</h2><p>Explore the early product preview. Some services are still in development and are not yet available for real-world use.</p></div>
+  <div class="journey-grid">
+    <a class="journey-card" href="#account"><span>01</span><h3>Sign in securely</h3><p>Use your phone number. Real SMS delivery depends on Firebase production setup.</p><b>Go to sign in →</b></a>
+    <a class="journey-card" href="profile.html"><span>02</span><h3>Build your profile</h3><p>Set your adult profile, country, state and preferred language.</p><b>Open profile →</b></a>
+    <a class="journey-card" href="connect.html"><span>03</span><h3>Explore Connect</h3><p>Preview discovery, mutual interest, chat and booking screens. These are not live booking services.</p><b>Open preview →</b></a>
+  </div>
 </section>
 <section class="section" id="how">
   <p class="eyebrow">SIMPLE • TRANSPARENT</p>
