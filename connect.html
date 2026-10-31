@@ -36,11 +36,16 @@ body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}.welcome-card{max-w
 <nav class="app-bottom-nav" aria-label="TEMPOYA app navigation"><a href="#discover" aria-current="page"><span aria-hidden="true">⌕</span><span>Discover</span></a><a href="#matches"><span aria-hidden="true">♡</span><span>Matches</span></a><a href="#chat"><span aria-hidden="true">☏</span><span>Chat</span></a><a href="#booking"><span aria-hidden="true">▣</span><span>Bookings</span></a><a href="profile.html"><span aria-hidden="true">♙</span><span>Profile</span></a></nav>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {initializeAppCheck,ReCaptchaEnterpriseProvider} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app-check.js";
+import {recaptchaEnterpriseSiteKey} from "./app-check-config.js";
+import {getFunctions,httpsCallable} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-functions.js";
 import {getAuth,onAuthStateChanged,signOut,RecaptchaVerifier,signInWithPhoneNumber} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {getFirestore,collection,doc,getDoc,getDocs,setDoc,addDoc,query,where,orderBy,serverTimestamp,Timestamp,limit,writeBatch} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 import {getStorage,ref as storageRef,uploadBytes,getBlob} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
 import {firebaseConfig} from "./firebase-config.js";
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),storage=getStorage(app),$=id=>document.getElementById(id);
+const app=initializeApp(firebaseConfig);
+initializeAppCheck(app,{provider:new ReCaptchaEnterpriseProvider(recaptchaEnterpriseSiteKey),isTokenAutoRefreshEnabled:true});
+const auth=getAuth(app),db=getFirestore(app),storage=getStorage(app),functions=getFunctions(app,"asia-south1"),$=id=>document.getElementById(id);
 let me=null,myProfile=null,matched=[],editingMessageId=null,connectConfirmation=null,connectRecaptcha=null;
 const cform=$("connect-phone-form");if(cform)cform.addEventListener("submit",async e=>{e.preventDefault();const note=$("connect-auth-status"),btn=$("connect-continue"),code=$("connect-otp").value.trim();btn.disabled=true;try{if(connectConfirmation){if(!/^\\d{6}$/.test(code))throw Error("Enter the 6-digit SMS code.");await connectConfirmation.confirm(code);location.assign("profile.html");return}const phone=$("connect-country").value+$("connect-phone").value.replace(/\\D/g,"");if(!/^\\+[1-9]\\d{7,14}$/.test(phone))throw Error("Enter a valid mobile number.");connectRecaptcha=new RecaptchaVerifier(auth,"connect-recaptcha",{});await connectRecaptcha.render();connectConfirmation=await signInWithPhoneNumber(auth,phone,connectRecaptcha);note.textContent="SMS sent. Enter the code and tap Continue again.";btn.textContent="Verify & Continue";}catch(err){note.textContent=err.code==="auth/unauthorized-domain"?"This domain is not authorized in Firebase.":err.code==="auth/too-many-requests"?"SMS requests are temporarily limited. Wait before retrying.":err.message||"Could not continue.";}finally{btn.disabled=false}});function status(t,kind=""){ $("app-status").textContent=t;$("app-status").className="status "+kind}
 function esc(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
