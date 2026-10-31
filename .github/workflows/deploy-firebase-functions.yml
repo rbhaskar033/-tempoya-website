@@ -41,4 +41,4 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Deploy Razorpay verification functions to Firebase
-        run: npx --yes firebase-tools deploy --only functions:createRazorpayVerificationOrder,functions:verifyRazorpayVerificationPayment --project tempoya --non-interactive
+        run: npx --yes firebase-tools deploy --only functions:createRazorpayVerificationOrder,functions:verifyRazorpayVerificationPayment,functions:createRazorpayBookingOrder,functions:verifyRazorpayBookingPayment --project tempoya --non-interactive
