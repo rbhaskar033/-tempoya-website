@@ -43,7 +43,7 @@ jobs:
 
           payment_methods = (root / "payment-methods-config.js").read_text()
           profile_for_payments = (root / "profile.html").read_text()
-          method_codes = re.findall(r"^  ([A-Z]{2}):\\{title:", payment_methods, re.M)
+          method_codes = re.findall(r"^  ([A-Z]{2}):[{]title:", payment_methods, re.M)
           if len(method_codes) != 22 or len(set(method_codes)) != 22:
               print(f"FAIL: expected payment method catalogue for 22 countries; found {len(method_codes)} entries / {len(set(method_codes))} unique")
               sys.exit(1)
@@ -69,7 +69,7 @@ jobs:
               sys.exit(1)
 
           rules = (root / "firestore.rules").read_text()
-          if re.search(r"^\\s*allow\\s+read\\s*,\\s*write\\s*:\\s*if\\s+true\\s*;", rules, re.M):
+          if re.search(r"^[ \t]*allow[ \t]+read[ \t]*,[ \t]*write[ \t]*:[ \t]*if[ \t]+true[ \t]*;", rules, re.M):
               print("FAIL: public Firestore read/write rule detected")
               sys.exit(1)
           if 'request.auth.uid == userId' not in rules:
