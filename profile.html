@@ -6,7 +6,7 @@
 <link rel="icon" type="image/jpeg" href="/assets/tempoya-apple-touch-icon.jpg?v=20261016b">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#101a33">
-<title>TEMPOYA — Your Profile</title><link rel="stylesheet" href="styles.css?v=20261101-profilefix1">
+<title>TEMPOYA — Your Profile</title><link rel="stylesheet" href="styles.css?v=20261102-paymentdiag1">
 <style>
 .account-wrap{max-width:820px;margin:2rem auto;padding:1rem}.account-panel{background:#fff;color:#172033;border-radius:1.2rem;padding:clamp(1rem,4vw,2.25rem);box-shadow:0 12px 36px #0002}.account-status{padding:.9rem 1rem;border-radius:.75rem;background:#eef2ff;color:#23315c;margin:1rem 0;line-height:1.5}.success{background:#e8f5e9;color:#1b5e20}.error{background:#ffebee;color:#8a1c1c}.profile-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.profile-form label{display:block;font-weight:600}.profile-form input,.profile-form select{box-sizing:border-box;display:block;width:100%;padding:.8rem;margin-top:.4rem;border:1px solid #cbd2df;border-radius:.6rem;background:#fff;color:#172033;font:inherit}.full{grid-column:1/-1}.photo-row{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}#photo-preview{width:100px;height:100px;border-radius:50%;object-fit:cover;background:#edf0f6;border:1px solid #ccd2df}.account-actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.4rem}.account-note{color:#465064;line-height:1.6;font-size:.92rem}@media(max-width:560px){.profile-form{grid-template-columns:1fr}.full{grid-column:auto}}
 </style><style>
@@ -128,7 +128,7 @@ const country=(window.TEMPOYA_COUNTRIES||[]).find(x=>x.country===countryName);
 if(!country)return $("payment-status").textContent="This country is not configured for verification checkout.";
 const btn=$("pay-verification");btn.disabled=true;$("payment-status").textContent="Preparing secure Razorpay checkout…";
 try{
-const createOrder=httpsCallable(functions,"createRazorpayVerificationOrder");
+const createOrder=httpsCallable(functions,"createRazorpayVerificationOrder",{timeout:30000});
 const result=await createOrder({countryCode:country.countryCode});
 const order=result.data;
 if(!order?.keyId||!order?.orderId)throw new Error("Razorpay order details were not returned.");
@@ -174,9 +174,15 @@ $("payment-status").textContent="Razorpay Checkout is opening. Live payment work
 checkout.open();
 }catch(e){
  console.error("TEMPOYA Razorpay checkout error",e);
- $("payment-status").textContent=(e.code==="functions/not-found"||e.code==="not-found")
- ?"Razorpay payment backend is not deployed yet. No money was collected by TEMPOYA."
- :(e.message||"Razorpay checkout is not ready. No verification status was changed.");
+ const code=String(e.code||"");
+ const message=String(e.message||"").replace(/^FirebaseError:\\s*/,"");
+ let guidance="Checkout start కాలేదు. ఎలాంటి చెల్లింపూ చేయబడలేదు.";
+ if(code.includes("app-check")||code.includes("unauthenticated")) guidance="Sign-in/App Check నిర్ధారణ విఫలమైంది. మళ్లీ sign-in చేయండి; Firebase App Check website domain/site key మరియు callable function settings పరిశీలించాలి.";
+ else if(code.includes("not-found")) guidance="Firebase callable function అందుబాటులో లేదు. createRazorpayVerificationOrder deployment/region asia-south1 పరిశీలించాలి.";
+ else if(code.includes("failed-precondition")) guidance="Razorpay account/currency/secret configuration ఈ orderను అనుమతించలేదు. Razorpay Dashboard మరియు Firebase Secret Manager పరిశీలించాలి.";
+ else if(code.includes("deadline-exceeded")||code.includes("unavailable")||code.includes("network")) guidance="Backend స్పందన రాలేదు లేదా network timeout. Firebase function logs, App Check, internet connection పరిశీలించాలి.";
+ else if(code.includes("already-exists")||code.includes("aborted")) guidance="ఇప్పటికే pending verification order ఉంది. payment status చూసి మాత్రమే మళ్లీ ప్రయత్నించాలి.";
+ $("payment-status").textContent=guidance+" Error: "+(code||"unknown")+" — "+message;
  btn.disabled=false;
 }
 });
