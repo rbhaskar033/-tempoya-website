@@ -44,9 +44,32 @@ jobs:
         run: npx --yes firebase-tools deploy --only functions:createRazorpayVerificationOrder,functions:verifyRazorpayVerificationPayment,functions:createRazorpayBookingOrder,functions:verifyRazorpayBookingPayment --project tempoya --non-interactive
 
       - name: Ensure callable Cloud Run services allow public invocation
+        shell: bash
         run: |
-          for service in createRazorpayVerificationOrder verifyRazorpayVerificationPayment createRazorpayBookingOrder verifyRazorpayBookingPayment; do
-            gcloud run services add-iam-policy-binding "$service" \
+          set -euo pipefail
+          functions=(
+            createRazorpayVerificationOrder
+            verifyRazorpayVerificationPayment
+            createRazorpayBookingOrder
+            verifyRazorpayBookingPayment
+          )
+
+          for function_name in "${functions[@]}"; do
+            service_resource="$(gcloud functions describe "$function_name" \
+              --gen2 \
+              --region=asia-south1 \
+              --project=tempoya \
+              --format='value(serviceConfig.service)')"
+
+            if [[ -z "$service_resource" ]]; then
+              echo "::error::Could not resolve Cloud Run service for Firebase function $function_name"
+              exit 1
+            fi
+
+            service_name="${service_resource##*/}"
+            echo "Granting Cloud Run invocation to callable service: $service_name"
+
+            gcloud run services add-iam-policy-binding "$service_name" \
               --region=asia-south1 \
               --project=tempoya \
               --member="allUsers" \
