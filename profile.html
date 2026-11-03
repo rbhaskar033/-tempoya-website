@@ -128,6 +128,15 @@ const country=(window.TEMPOYA_COUNTRIES||[]).find(x=>x.country===countryName);
 if(!country)return $("payment-status").textContent="This country is not configured for verification checkout.";
 const btn=$("pay-verification");btn.disabled=true;$("payment-status").textContent="Preparing secure Razorpay checkout…";
 try{
+/* Refresh the Firebase ID token immediately before the callable request. This avoids
+   sending a stale/missing Auth token after OTP sign-in or a long-lived profile page. */
+const signedInUser=auth.currentUser;
+if(!signedInUser){
+  const authError=new Error("Please sign in again before starting verification payment.");
+  authError.code="functions/unauthenticated";
+  throw authError;
+}
+await signedInUser.getIdToken(true);
 const createOrder=httpsCallable(functions,"createRazorpayVerificationOrder",{timeout:30000});
 const result=await createOrder({countryCode:country.countryCode});
 const order=result.data;
