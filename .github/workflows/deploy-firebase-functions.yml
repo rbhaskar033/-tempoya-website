@@ -46,10 +46,10 @@ jobs:
       - name: Ensure callable Cloud Run services allow public invocation
         run: |
           for service in createRazorpayVerificationOrder verifyRazorpayVerificationPayment createRazorpayBookingOrder verifyRazorpayBookingPayment; do
-            gcloud run services add-iam-policy-binding "$service" \\
-              --region=asia-south1 \\
-              --project=tempoya \\
-              --member="allUsers" \\
-              --role="roles/run.invoker" \\
+            gcloud run services add-iam-policy-binding "$service" \
+              --region=asia-south1 \
+              --project=tempoya \
+              --member="allUsers" \
+              --role="roles/run.invoker" \
               --quiet
           done
