@@ -89,7 +89,7 @@ if(methodsPanel&&list&&title){
     config.groups.forEach(group=>{
       const heading=document.createElement("p");heading.className="account-note";heading.style.fontWeight="700";heading.textContent=group.name;list.appendChild(heading);
       const row=document.createElement("div");row.className="payment-method-chips";
-      group.items.forEach(item=>{const chip=document.createElement("button");chip.type="button";chip.className="payment-method-chip";chip.textContent=item;chip.dataset.paymentMethod=item;chip.setAttribute("aria-pressed",String(selectedPaymentMethod===item));chip.addEventListener("click",()=>{selectedPaymentMethod=item;list.querySelectorAll(".payment-method-chip").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.paymentMethod===item)));$("payment-status").textContent="ఎంచుకున్న పేమెంట్ విధానం: "+item+". ఇప్పుడు Check Secure Verification Payment నొక్కి provider checkout‌లో అందుబాటులో ఉన్న పద్ధతిని ఎంచుకోండి.";});row.appendChild(chip);});
+      group.items.forEach(item=>{const chip=document.createElement("button");chip.type="button";chip.className="payment-method-chip";chip.textContent=item;chip.dataset.paymentMethod=item;chip.setAttribute("aria-pressed",String(selectedPaymentMethod===item));chip.addEventListener("click",()=>{selectedPaymentMethod=item;list.querySelectorAll(".payment-method-chip").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.paymentMethod===item)));$("payment-status").textContent="ఎంచుకున్న పేమెంట్ విధానం: "+item+". సురక్షిత చెల్లింపు తెరను ప్రారంభిస్తున్నాము…";$("pay-verification").click();});row.appendChild(chip);});
       list.appendChild(row);
     });
   }
