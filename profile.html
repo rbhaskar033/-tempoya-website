@@ -46,7 +46,7 @@
 </script>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import {initializeAppCheck,ReCaptchaEnterpriseProvider} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app-check.js";
+import {initializeAppCheck,ReCaptchaEnterpriseProvider,getToken} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app-check.js";
 import {recaptchaEnterpriseSiteKey} from "./app-check-config.js";
 import {getAuth,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {getFirestore,doc,getDoc,setDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
@@ -54,10 +54,10 @@ import {getStorage,ref,uploadBytes,getDownloadURL} from "https://www.gstatic.com
 import {getFunctions,httpsCallable} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-functions.js";
 import {firebaseConfig} from "./firebase-config.js";
 const app=initializeApp(firebaseConfig);
-let appCheckReady=false;
+let appCheckReady=false,appCheckInstance=null;
 if(recaptchaEnterpriseSiteKey && !recaptchaEnterpriseSiteKey.startsWith("REPLACE_WITH_")){
   try{
-    initializeAppCheck(app,{provider:new ReCaptchaEnterpriseProvider(recaptchaEnterpriseSiteKey),isTokenAutoRefreshEnabled:true});
+    appCheckInstance=initializeAppCheck(app,{provider:new ReCaptchaEnterpriseProvider(recaptchaEnterpriseSiteKey),isTokenAutoRefreshEnabled:true});
     appCheckReady=true;
   }catch(appCheckError){console.error("TEMPOYA App Check initialization failed",appCheckError);}
 }
@@ -122,7 +122,7 @@ profileSaved=true;showVerificationNextStep(country);say("Profile saved to Firest
 }finally{lock(false)}});
 $("pay-verification").addEventListener("click",async()=>{
 if(!user||!profileSaved)return say("Sign in and save your profile before payment.","error");
-if(!appCheckReady){$("payment-status").textContent="Firebase App Check is not configured yet. No payment has been started. Ask the administrator to register the website in Firebase App Check, put the reCAPTCHA Enterprise site key in app-check-config.js, then deploy the site.";return;}
+if(!appCheckReady||!appCheckInstance){$("payment-status").textContent="Firebase App Check is not configured yet. No payment has been started. Check the website registration and reCAPTCHA Enterprise site key.";return;}
 const countryName=$("country").value;
 const country=(window.TEMPOYA_COUNTRIES||[]).find(x=>x.country===countryName);
 if(!country)return $("payment-status").textContent="This country is not configured for verification checkout.";
@@ -137,6 +137,9 @@ if(!signedInUser){
   throw authError;
 }
 await signedInUser.getIdToken(true);
+/* Initialization alone does not prove App Check can issue a token for this domain. */
+const appCheckToken=await getToken(appCheckInstance,true);
+if(!appCheckToken?.token)throw new Error("Firebase App Check token was not issued for this site.");
 const createOrder=httpsCallable(functions,"createRazorpayVerificationOrder",{timeout:30000});
 const result=await createOrder({countryCode:country.countryCode});
 const order=result.data;
