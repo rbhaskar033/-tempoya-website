@@ -152,6 +152,15 @@ const checkout=new window.Razorpay({
  key:order.keyId,order_id:order.orderId,amount:order.amount,currency:order.currency,
  name:order.businessName||"TEMPOYA",description:order.description||"One-time account verification",
  prefill:order.prefill||{},
+ // Selected chip limits checkout to a payment category supported by Razorpay.
+ // Individual UPI apps and banks remain controlled by merchant enablement.
+ config:selectedPaymentMethod?{
+  display:{
+   blocks:{selected:{name:"Selected payment method",instruments:[{method:(/upi|phonepe|google pay|paytm|bhim/i.test(selectedPaymentMethod)?"upi":/card/i.test(selectedPaymentMethod)?"card":/netbanking|bank/i.test(selectedPaymentMethod)?"netbanking":/wallet/i.test(selectedPaymentMethod)?"wallet":"upi")}] }},
+   sequence:["block.selected"],
+   preferences:{show_default_blocks:true}
+  }
+ }:undefined,
  theme:{color:"#d63384"},
  handler:async function(response){
   $("payment-status").textContent="Payment response received. Verifying securely with the server…";
