@@ -133,7 +133,7 @@ if(methodsPanel&&list&&title){
     config.groups.forEach(group=>{
       const heading=document.createElement("p");heading.className="account-note";heading.style.fontWeight="700";heading.textContent=group.name;list.appendChild(heading);
       const row=document.createElement("div");row.className="payment-method-chips";
-      group.items.forEach(item=>{const chip=document.createElement("button");chip.type="button";chip.className="payment-method-chip";chip.textContent=item;chip.dataset.paymentMethod=item;chip.setAttribute("aria-pressed",String(selectedPaymentMethod===item));chip.addEventListener("click",()=>{selectedPaymentMethod=item;list.querySelectorAll(".payment-method-chip").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.paymentMethod===item)));$("payment-status").textContent="ఎంచుకున్న పేమెంట్ విధానం: "+item+". సురక్షిత చెల్లింపు తెరను ప్రారంభిస్తున్నాము…";$("pay-verification").click();});row.appendChild(chip);});
+      group.items.forEach(item=>{const chip=document.createElement("button");chip.type="button";chip.className="payment-method-chip";chip.textContent=item;chip.dataset.paymentMethod=item;chip.setAttribute("aria-pressed",String(selectedPaymentMethod===item));chip.addEventListener("click",()=>{selectedPaymentMethod=item;list.querySelectorAll(".payment-method-chip").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.paymentMethod===item)));$("payment-status").textContent="Selected payment method: "+item+". Starting secure checkout…";$("pay-verification").click();});row.appendChild(chip);});
       list.appendChild(row);
     });
   }
@@ -238,13 +238,13 @@ checkout.open();
  console.error("TEMPOYA Razorpay checkout error",e);
  const code=String(e.code||"");
  const message=String(e.message||"").replace(/^FirebaseError:\\s*/,"");
- let guidance="Checkout start కాలేదు. ఎలాంటి చెల్లింపూ చేయబడలేదు.";
- if(code.includes("app-check")||code.includes("unauthenticated")) guidance="Sign-in/App Check నిర్ధారణ విఫలమైంది. మళ్లీ sign-in చేయండి; Firebase App Check website domain/site key మరియు callable function settings పరిశీలించాలి.";
- else if(code.includes("not-found")) guidance="Firebase callable function అందుబాటులో లేదు. createRazorpayVerificationOrder deployment/region asia-south1 పరిశీలించాలి.";
- else if(code.includes("failed-precondition")) guidance="Razorpay account/currency/secret configuration ఈ orderను అనుమతించలేదు. Razorpay Dashboard మరియు Firebase Secret Manager పరిశీలించాలి.";
- else if(code.includes("deadline-exceeded")||code.includes("unavailable")||code.includes("network")) guidance="Backend స్పందన రాలేదు లేదా network timeout. Firebase function logs, App Check, internet connection పరిశీలించాలి.";
- else if(code.includes("already-exists")||code.includes("aborted")) guidance="ఇప్పటికే pending verification order ఉంది. payment status చూసి మాత్రమే మళ్లీ ప్రయత్నించాలి.";
- $("payment-status").textContent=guidance+" Error: "+(code||"unknown")+" — "+message;
+ let guidance="Secure checkout could not start. No payment was made.";
+ if(code.includes("app-check")||code.includes("unauthenticated")) guidance="Security verification failed. Please sign in again. If this continues, contact TEMPOYA support. No payment was made.";
+ else if(code.includes("not-found")) guidance="Secure payment service is temporarily unavailable. No payment was made. Please try again later.";
+ else if(code.includes("failed-precondition")) guidance="The payment provider is not ready for this transaction. No payment was made. Please contact TEMPOYA support.";
+ else if(code.includes("deadline-exceeded")||code.includes("unavailable")||code.includes("network")) guidance="A network or server issue prevented checkout. No payment was made. Please check your connection and try later.";
+ else if(code.includes("already-exists")||code.includes("aborted")) guidance="A verification request may already be pending. Check your payment status before trying again.";
+ $("payment-status").textContent=guidance;
  btn.disabled=false;
 }
 });
