@@ -4,7 +4,9 @@
  */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app-check.js";
 import { firebaseConfig } from "./firebase-config.js";
+import { recaptchaEnterpriseSiteKey } from "./app-check-config.js";
 
 const form = document.getElementById("tempoya-phone-form");
 if (form) {
@@ -97,6 +99,17 @@ if (form) {
   } else {
     try {
       const app = initializeApp(firebaseConfig);
+      // Initialize Firebase App Check before Firebase Auth requests. This site key
+      // must match the reCAPTCHA Enterprise key registered for this Firebase web app.
+      try {
+        initializeAppCheck(app, {
+          provider: new ReCaptchaEnterpriseProvider(recaptchaEnterpriseSiteKey),
+          isTokenAutoRefreshEnabled: true
+        });
+      } catch (appCheckError) {
+        console.error("TEMPOYA Firebase App Check initialization error", appCheckError);
+        say("App Check could not initialize. Verify the registered reCAPTCHA Enterprise site key and authorized domain.");
+      }
       auth = getAuth(app);
       auth.useDeviceLanguage();
 
