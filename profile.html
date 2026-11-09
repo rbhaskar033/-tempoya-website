@@ -181,9 +181,8 @@ if(!signedInUser){
   throw authError;
 }
 await signedInUser.getIdToken(true);
-/* Initialization alone does not prove App Check can issue a token for this domain. */
-const appCheckToken=await getToken(appCheckInstance,true);
-if(!appCheckToken?.token)throw new Error("Firebase App Check token was not issued for this site.");
+/* callTempoyaCallable obtains and attaches the forced-refresh App Check token.
+   Avoid requesting a second App Check token here; one fresh token is sufficient. */
 const order=await callTempoyaCallable("createRazorpayVerificationOrder",{countryCode:country.countryCode});
 if(!order?.keyId||!order?.orderId)throw new Error("Razorpay order details were not returned.");
 if(!window.Razorpay){
