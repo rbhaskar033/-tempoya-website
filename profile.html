@@ -46,12 +46,12 @@
 </script>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import {initializeAppCheck,ReCaptchaEnterpriseProvider,getToken} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app-check.js";
+import {initializeAppCheck,ReCaptchaEnterpriseProvider} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app-check.js";
 import {recaptchaEnterpriseSiteKey} from "./app-check-config.js";
 import {getAuth,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {getFirestore,doc,getDoc,setDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 import {getStorage,ref,uploadBytes,getDownloadURL} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
-import {getFunctions} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-functions.js";
+import {getFunctions,httpsCallable} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-functions.js";
 import {firebaseConfig} from "./firebase-config.js";
 const app=initializeApp(firebaseConfig);
 let appCheckReady=false,appCheckInstance=null;
@@ -62,9 +62,8 @@ if(recaptchaEnterpriseSiteKey && !recaptchaEnterpriseSiteKey.startsWith("REPLACE
   }catch(appCheckError){console.error("TEMPOYA App Check initialization failed",appCheckError);}
 }
 const auth=getAuth(app),db=getFirestore(app),storage=getStorage(app),functions=getFunctions(app,"asia-south1");
-/* Explicit callable transport: attach freshly minted Firebase Auth and App Check
-   tokens rather than relying on an implicit SDK auth context. Keep callable
-   protocol payload/response handling compatible with Firebase Functions v2. */
+/* Use Firebase's official callable SDK so Auth and App Check tokens
+   are attached by the SDK using the supported callable protocol. */
 async function callTempoyaCallable(name,data){
   const signedInUser=auth.currentUser;
   if(!signedInUser) {
@@ -72,38 +71,10 @@ async function callTempoyaCallable(name,data){
     e.code="functions/unauthenticated";
     throw e;
   }
-  const idToken=await signedInUser.getIdToken(true);
-  const appCheckResult=await getToken(appCheckInstance,true);
-  if(!idToken) {
-    const e=new Error("Firebase Authentication did not issue an ID token.");
-    e.code="functions/unauthenticated";
-    throw e;
-  }
-  if(!appCheckResult?.token) {
-    const e=new Error("Firebase App Check did not issue a token for this domain.");
-    e.code="functions/app-check-token-invalid";
-    throw e;
-  }
-  const response=await fetch("https://asia-south1-tempoya.cloudfunctions.net/"+encodeURIComponent(name),{
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      "Authorization":"Bearer "+idToken,
-      "X-Firebase-AppCheck":appCheckResult.token
-    },
-    body:JSON.stringify({data})
-  });
-  let body={};
-  try{body=await response.json();}catch(_){}
-  if(!response.ok||body.error){
-    const status=String(body.error?.status||"UNKNOWN").toLowerCase().replace(/_/g,"-");
-    const e=new Error(body.error?.message||("Callable request failed with HTTP "+response.status));
-    e.code="functions/"+status;
-    throw e;
-  }
-  if(Object.prototype.hasOwnProperty.call(body,"result"))return body.result;
-  if(Object.prototype.hasOwnProperty.call(body,"data"))return body.data;
-  throw new Error("Firebase callable returned an unexpected response.");
+  await signedInUser.getIdToken(true);
+  const callable=httpsCallable(functions,name);
+  const result=await callable(data);
+  return result.data;
 }
 
 const $=id=>document.getElementById(id),form=$("profile-form"),status=$("status");
