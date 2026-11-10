@@ -13,7 +13,10 @@ function requireAuth(request) {
 
 const { GoogleAuth } = require("google-auth-library");
 const RECAPTCHA_ENTERPRISE_SITE_KEY = "6LfdwhIuAAAAAC0hcyt2TgXk5or3JNDrEQxATrMH";
-const RECAPTCHA_ALLOWED_HOSTNAMES = new Set(["app.tempoya.com"]);
+function isAllowedFraudDefenseHostname(hostname) {
+  const normalized = String(hostname || "").toLowerCase().replace(/\\.$/, "");
+  return normalized === "tempoya.com" || normalized.endsWith(".tempoya.com");
+}
 const recaptchaGoogleAuth = new GoogleAuth({ scopes: ["https://www.googleapis.com/auth/cloud-platform"] });
 
 async function verifyFraudDefenseToken(token, expectedAction, request) {
@@ -55,7 +58,7 @@ async function verifyFraudDefenseToken(token, expectedAction, request) {
     console.warn("Fraud Defense rejected token", properties.invalidReason || "invalid");
     throw new HttpsError("permission-denied", "Fraud Defense rejected the security token. Refresh the page and try again.");
   }
-  if (!RECAPTCHA_ALLOWED_HOSTNAMES.has(String(properties.hostname || "").toLowerCase())) {
+  if (!isAllowedFraudDefenseHostname(properties.hostname)) {
     console.warn("Fraud Defense hostname mismatch", properties.hostname || "missing");
     throw new HttpsError("permission-denied", "Fraud Defense token came from an unapproved website domain.");
   }
