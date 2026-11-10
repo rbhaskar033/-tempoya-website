@@ -11,6 +11,61 @@ function requireAuth(request) {
   return request.auth.uid;
 }
 
+const { GoogleAuth } = require("google-auth-library");
+const RECAPTCHA_ENTERPRISE_SITE_KEY = "6LfdwhIuAAAAAC0hcyt2TgXk5or3JNDrEQxATrMH";
+const RECAPTCHA_ALLOWED_HOSTNAMES = new Set(["app.tempoya.com"]);
+const recaptchaGoogleAuth = new GoogleAuth({ scopes: ["https://www.googleapis.com/auth/cloud-platform"] });
+
+async function verifyFraudDefenseToken(token, expectedAction, request) {
+  if (typeof token !== "string" || token.length < 20 || token.length > 8192) {
+    throw new HttpsError("invalid-argument", "A fresh Fraud Defense token is required.");
+  }
+  let accessToken;
+  try {
+    const client = await recaptchaGoogleAuth.getClient();
+    const tokenResult = await client.getAccessToken();
+    accessToken = typeof tokenResult === "string" ? tokenResult : tokenResult?.token;
+  } catch (error) {
+    console.error("Fraud Defense Google authentication failed", error.message);
+    throw new HttpsError("failed-precondition", "Fraud Defense backend authentication is not configured. Grant the reCAPTCHA Enterprise Agent role to the Functions runtime service account.");
+  }
+  if (!accessToken) throw new HttpsError("failed-precondition", "Fraud Defense could not obtain backend credentials.");
+
+  let response;
+  try {
+    response = await fetch("https://recaptchaenterprise.googleapis.com/v1/projects/tempoya/assessments", {
+      method: "POST",
+      headers: { Authorization: "Bearer " + accessToken, "Content-Type": "application/json" },
+      body: JSON.stringify({ event: {
+        token, siteKey: RECAPTCHA_ENTERPRISE_SITE_KEY, expectedAction,
+        userAgent: request.rawRequest?.headers?.["user-agent"] || ""
+      } })
+    });
+  } catch (error) {
+    console.error("Fraud Defense assessment request failed", error.message);
+    throw new HttpsError("unavailable", "Fraud Defense could not be reached. Please retry shortly.");
+  }
+  const assessment = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    console.error("Fraud Defense assessment API error", response.status, assessment.error?.status || "unknown");
+    throw new HttpsError("failed-precondition", "Google Cloud Fraud Defense assessment failed. Check the reCAPTCHA Enterprise API and Functions runtime service-account permission.");
+  }
+  const properties = assessment.tokenProperties || {};
+  if (properties.valid !== true) {
+    console.warn("Fraud Defense rejected token", properties.invalidReason || "invalid");
+    throw new HttpsError("permission-denied", "Fraud Defense rejected the security token. Refresh the page and try again.");
+  }
+  if (!RECAPTCHA_ALLOWED_HOSTNAMES.has(String(properties.hostname || "").toLowerCase())) {
+    console.warn("Fraud Defense hostname mismatch", properties.hostname || "missing");
+    throw new HttpsError("permission-denied", "Fraud Defense token came from an unapproved website domain.");
+  }
+  if (properties.action !== expectedAction) {
+    console.warn("Fraud Defense action mismatch", properties.action || "missing", expectedAction);
+    throw new HttpsError("permission-denied", "Fraud Defense action did not match the requested operation.");
+  }
+  return { score: assessment.riskAnalysis?.score ?? null };
+}
+
 // Razorpay verification checkout. Secrets must be configured in Firebase before deployment.
 // Razorpay/account approval and international-currency support are controlled by Razorpay.
 const RAZORPAY_KEY_ID = defineSecret("RAZORPAY_KEY_ID");
@@ -47,6 +102,7 @@ exports.createRazorpayVerificationOrder = onCall(
   { region:"asia-south1", invoker:"public", secrets:[RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET], enforceAppCheck:true },
   async request => {
     const uid = requireAuth(request);
+    await verifyFraudDefenseToken(request.data?.recaptchaToken, "verification_checkout", request);
     const countryCode = String(request.data?.countryCode || "").toUpperCase();
     const fee = RAZORPAY_FEES[countryCode];
     if (!fee) throw new HttpsError("invalid-argument","Unsupported country.");
@@ -92,6 +148,7 @@ exports.verifyRazorpayVerificationPayment = onCall(
   { region:"asia-south1", invoker:"public", secrets:[RAZORPAY_KEY_ID,RAZORPAY_KEY_SECRET], enforceAppCheck:true },
   async request => {
     const uid=requireAuth(request);
+    await verifyFraudDefenseToken(request.data?.recaptchaToken, "verification_payment", request);
     const orderId=String(request.data?.razorpay_order_id||"");
     const paymentId=String(request.data?.razorpay_payment_id||"");
     const signature=String(request.data?.razorpay_signature||"");
@@ -162,6 +219,7 @@ exports.createRazorpayBookingOrder = onCall(
   { region:"asia-south1", invoker:"public", secrets:[RAZORPAY_KEY_ID,RAZORPAY_KEY_SECRET], enforceAppCheck:true },
   async request => {
     const uid=requireAuth(request);
+    await verifyFraudDefenseToken(request.data?.recaptchaToken, "booking_checkout", request);
     const bookingId=String(request.data?.bookingId||"").trim();
     const tier=String(request.data?.tier||"");
     if(!bookingId || bookingId.length>150 || !["Basic","Standard","Premium"].includes(tier))
@@ -214,6 +272,7 @@ exports.verifyRazorpayBookingPayment = onCall(
   { region:"asia-south1", invoker:"public", secrets:[RAZORPAY_KEY_ID,RAZORPAY_KEY_SECRET], enforceAppCheck:true },
   async request => {
     const uid=requireAuth(request);
+    await verifyFraudDefenseToken(request.data?.recaptchaToken, "booking_payment", request);
     const orderId=String(request.data?.razorpay_order_id||"");
     const paymentId=String(request.data?.razorpay_payment_id||"");
     const signature=String(request.data?.razorpay_signature||"");
