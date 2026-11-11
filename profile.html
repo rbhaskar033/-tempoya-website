@@ -232,7 +232,8 @@ checkout.open();
  else if(code.includes("failed-precondition")) guidance="The payment provider is not ready for this transaction. No payment was made. Please contact TEMPOYA support.";
  else if(code.includes("deadline-exceeded")||code.includes("unavailable")||code.includes("network")) guidance="A network or server issue prevented checkout. No payment was made. Please check your connection and try later.";
  else if(code.includes("already-exists")||code.includes("aborted")) guidance="A verification request may already be pending. Check your payment status before trying again.";
- $("payment-status").textContent=guidance;
+ const safeDetail=(message||"").replace(/[\r\n]+/g," ").slice(0,180);
+ $("payment-status").textContent=guidance+(code||safeDetail?" (Diagnostic: "+(code||"no-code")+(safeDetail?" — "+safeDetail:"")+")":"");
  btn.disabled=false;
 }
 });
