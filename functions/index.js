@@ -14,8 +14,9 @@ function requireAuth(request) {
 const { GoogleAuth } = require("google-auth-library");
 const RECAPTCHA_ENTERPRISE_SITE_KEY = "6LfdwhIuAAAAAC0hcyt2TgXk5or3JNDrEQxATrMH";
 function isAllowedFraudDefenseHostname(hostname) {
-  const normalized = String(hostname || "").toLowerCase().replace(/\\.$/, "");
-  return normalized === "tempoya.com" || normalized.endsWith(".tempoya.com");
+  const normalized = String(hostname || "").trim().toLowerCase().replace(/\.$/, "");
+  return normalized === "tempoya.app" || normalized.endsWith(".tempoya.app") ||
+    normalized === "tempoya.com" || normalized.endsWith(".tempoya.com");
 }
 const recaptchaGoogleAuth = new GoogleAuth({ scopes: ["https://www.googleapis.com/auth/cloud-platform"] });
 
