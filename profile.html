@@ -46,7 +46,7 @@
 </script>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import {initializeAppCheck,ReCaptchaEnterpriseProvider} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app-check.js";
+import {initializeAppCheck,ReCaptchaEnterpriseProvider,getToken} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app-check.js";
 import {recaptchaEnterpriseSiteKey} from "./app-check-config.js";
 import {getFraudDefenseToken} from "./fraud-defense.js";
 import {getAuth,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
@@ -70,6 +70,20 @@ async function callTempoyaCallable(name,data){
   if(!signedInUser) {
     const e=new Error("Please sign in again before continuing.");
     e.code="functions/unauthenticated";
+    throw e;
+  }
+  if(!appCheckInstance) {
+    const e=new Error("Firebase App Check did not initialize for this Web App.");
+    e.code="app-check/initialization-failed";
+    throw e;
+  }
+  // Obtain a fresh App Check token before every protected callable. The Firebase
+  // callable SDK then attaches the cached token in the X-Firebase-AppCheck header.
+  // Never log or send the token as ordinary request data.
+  const appCheckResult=await getToken(appCheckInstance,true);
+  if(!appCheckResult || typeof appCheckResult.token!=="string" || appCheckResult.token.length<20) {
+    const e=new Error("Firebase App Check did not issue a usable token. No payment request was sent.");
+    e.code="app-check/token-unavailable";
     throw e;
   }
   await signedInUser.getIdToken(true);
