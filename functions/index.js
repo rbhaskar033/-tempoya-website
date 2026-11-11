@@ -12,7 +12,7 @@ function requireAuth(request) {
 }
 
 const { GoogleAuth } = require("google-auth-library");
-const RECAPTCHA_ENTERPRISE_SITE_KEY = "6LfdwhIuAAAAAC0hcyt2TgXk5or3JNDrEQxATrMH";
+const RECAPTCHA_ENTERPRISE_SITE_KEY = "6LfdwhluAAAAAC0hcyt2TgXk5or3JNDrEQxATrMH";
 function isAllowedFraudDefenseHostname(hostname) {
   const normalized = String(hostname || "").trim().toLowerCase().replace(/\.$/, "");
   return normalized === "tempoya.app" || normalized.endsWith(".tempoya.app") ||
