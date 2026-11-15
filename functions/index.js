@@ -70,6 +70,28 @@ async function verifyFraudDefenseToken(token, expectedAction, request) {
   return { score: assessment.riskAnalysis?.score ?? null };
 }
 
+
+// No-payment diagnostic: confirms Auth + App Check + reCAPTCHA Enterprise assessment.
+// Requires a signed-in user and valid Firebase App Check token; never creates a Razorpay order.
+exports.diagnoseFraudDefense = onCall(
+  { region:"asia-south1", invoker:"public", enforceAppCheck:true },
+  async request => {
+    requireAuth(request);
+    try {
+      const result = await verifyFraudDefenseToken(request.data?.recaptchaToken, "backend_diagnostic", request);
+      return { ok:true, stage:"assessment", score:result.score, message:"Google reCAPTCHA Enterprise assessment succeeded." };
+    } catch (error) {
+      console.error("TEMPOYA no-payment diagnostic failed", error.code || "unknown", error.message || "");
+      return {
+        ok:false,
+        stage:"assessment",
+        code:error.code || "unknown",
+        message:error.message || "Fraud Defense assessment failed."
+      };
+    }
+  }
+);
+
 // Razorpay verification checkout. Secrets must be configured in Firebase before deployment.
 // Razorpay/account approval and international-currency support are controlled by Razorpay.
 const RAZORPAY_KEY_ID = defineSecret("RAZORPAY_KEY_ID");
