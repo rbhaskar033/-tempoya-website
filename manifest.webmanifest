@@ -8,6 +8,6 @@
   "background_color": "#080b25",
   "theme_color": "#080b25",
   "icons": [
-    { "src": "/assets/tempoya-new-logo.jpg", "sizes": "512x512", "type": "image/jpeg", "purpose": "any" }
+    { "src": "/assets/tempoya-new-logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
   ]
 }
