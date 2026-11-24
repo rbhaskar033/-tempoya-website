@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 470" role="img" aria-labelledby="t d">
+<title id="t">TEMPOYA pink heart handshake logo</title>
+<desc id="d">Pink neon heart enclosing a handshake, with TEMPOYA wordmark and Your Time. Your Choice. tagline.</desc>
+<defs>
+ <linearGradient id="p" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff2b8a"/><stop offset="1" stop-color="#ff5a9d"/></linearGradient>
+ <linearGradient id="glow" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff2c91"/><stop offset="1" stop-color="#9c1c80"/></linearGradient>
+ <filter id="g" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g filter="url(#g)">
+ <path d="M260 272 C220 235 74 145 96 82 C117 20 203 23 260 92 C317 23 403 20 424 82 C446 145 300 235 260 272Z" fill="none" stroke="url(#glow)" stroke-width="12" stroke-linecap="round"/>
+ <path d="M91 158 L165 92 Q178 80 194 91 L239 123 L281 104 Q296 97 309 109 L385 165 L337 218 L297 188 L276 207 Q260 221 245 208 L228 194 L211 207 Q195 220 179 206Z" fill="#ff2b8a" stroke="#160b27" stroke-width="14" stroke-linejoin="round"/>
+ <path d="M96 157 L151 208 Q167 223 183 208 L207 185 Q220 173 233 186 L251 203 Q265 216 280 202 L303 181 Q317 168 331 182 L350 200" fill="none" stroke="#ff8ab8" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"/>
+ <path d="M190 106 L222 129 L249 148 Q264 160 251 175 Q239 188 224 176 L196 155" fill="none" stroke="#ff8ab8" stroke-width="18" stroke-linecap="round"/>
+ <path d="M281 108 L256 130 Q241 144 255 159 Q269 173 284 160 L309 139" fill="none" stroke="#ff8ab8" stroke-width="18" stroke-linecap="round"/>
+ <path d="M216 194 L199 211 M243 205 L225 224 M270 204 L253 222" stroke="#ff8ab8" stroke-width="16" stroke-linecap="round"/>
+</g>
+<text x="260" y="360" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="66" font-weight="800" letter-spacing="2" fill="#ff2b8a">TEMPOYA</text>
+<text x="260" y="414" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="27" fill="#d9dbea">Your Time. Your Choice.</text>
+</svg>
