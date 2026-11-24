@@ -8,6 +8,6 @@
   "background_color": "#080b25",
   "theme_color": "#080b25",
   "icons": [
-    { "src": "/assets/tempoya-approved-handshake.svg?v=20261124-1", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+    { "src": "/assets/tempoya-approved-handshake.jpg?v=20261124-2", "sizes": "any", "type": "image/jpeg", "purpose": "any" }
   ]
 }
