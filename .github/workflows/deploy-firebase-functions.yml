@@ -1,0 +1,78 @@
+name: Deploy TEMPOYA Firebase Payment Functions
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "functions/**"
+      - "firebase.json"
+      - ".firebaserc"
+      - ".github/workflows/deploy-firebase-functions.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tempoya-firebase-functions
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install function dependencies
+        run: npm install --prefix functions
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy Razorpay verification functions to Firebase
+        run: npx --yes firebase-tools deploy --only functions:createRazorpayVerificationOrder,functions:verifyRazorpayVerificationPayment,functions:createRazorpayBookingOrder,functions:verifyRazorpayBookingPayment --project tempoya --non-interactive
+
+      - name: Ensure callable Cloud Run services allow public invocation
+        shell: bash
+        run: |
+          set -euo pipefail
+          functions=(
+            createRazorpayVerificationOrder
+            verifyRazorpayVerificationPayment
+            createRazorpayBookingOrder
+            verifyRazorpayBookingPayment
+          )
+
+          for function_name in "${functions[@]}"; do
+            service_resource="$(gcloud functions describe "$function_name" \
+              --gen2 \
+              --region=asia-south1 \
+              --project=tempoya \
+              --format='value(serviceConfig.service)')"
+
+            if [[ -z "$service_resource" ]]; then
+              echo "::error::Could not resolve Cloud Run service for Firebase function $function_name"
+              exit 1
+            fi
+
+            service_name="${service_resource##*/}"
+            echo "Granting Cloud Run invocation to callable service: $service_name"
+
+            gcloud run services add-iam-policy-binding "$service_name" \
+              --region=asia-south1 \
+              --project=tempoya \
+              --member="allUsers" \
+              --role="roles/run.invoker" \
+              --quiet
+          done

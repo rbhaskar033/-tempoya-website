@@ -1,0 +1,1696 @@
+[
+  {
+    "countryCode": "IN",
+    "country": "India",
+    "currencyCode": "INR",
+    "currencySymbol": "₹",
+    "verificationFee": "₹1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "US",
+    "country": "United States",
+    "currencyCode": "USD",
+    "currencySymbol": "$",
+    "verificationFee": "$1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "CA",
+    "country": "Canada",
+    "currencyCode": "CAD",
+    "currencySymbol": "CA$",
+    "verificationFee": "CA$1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "GB",
+    "country": "United Kingdom",
+    "currencyCode": "GBP",
+    "currencySymbol": "£",
+    "verificationFee": "£1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "AU",
+    "country": "Australia",
+    "currencyCode": "AUD",
+    "currencySymbol": "A$",
+    "verificationFee": "A$1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "NZ",
+    "country": "New Zealand",
+    "currencyCode": "NZD",
+    "currencySymbol": "NZ$",
+    "verificationFee": "NZ$1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "SG",
+    "country": "Singapore",
+    "currencyCode": "SGD",
+    "currencySymbol": "S$",
+    "verificationFee": "S$1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "AE",
+    "country": "United Arab Emirates",
+    "currencyCode": "AED",
+    "currencySymbol": "د.إ",
+    "verificationFee": "د.إ1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "SA",
+    "country": "Saudi Arabia",
+    "currencyCode": "SAR",
+    "currencySymbol": "ر.س",
+    "verificationFee": "ر.س1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "QA",
+    "country": "Qatar",
+    "currencyCode": "QAR",
+    "currencySymbol": "ر.ق",
+    "verificationFee": "ر.ق1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "DE",
+    "country": "Germany",
+    "currencyCode": "EUR",
+    "currencySymbol": "€",
+    "verificationFee": "€1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "FR",
+    "country": "France",
+    "currencyCode": "EUR",
+    "currencySymbol": "€",
+    "verificationFee": "€1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "IT",
+    "country": "Italy",
+    "currencyCode": "EUR",
+    "currencySymbol": "€",
+    "verificationFee": "€1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "ES",
+    "country": "Spain",
+    "currencyCode": "EUR",
+    "currencySymbol": "€",
+    "verificationFee": "€1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "NL",
+    "country": "Netherlands",
+    "currencyCode": "EUR",
+    "currencySymbol": "€",
+    "verificationFee": "€1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "IE",
+    "country": "Ireland",
+    "currencyCode": "EUR",
+    "currencySymbol": "€",
+    "verificationFee": "€1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "JP",
+    "country": "Japan",
+    "currencyCode": "JPY",
+    "currencySymbol": "¥",
+    "verificationFee": "¥1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "KR",
+    "country": "South Korea",
+    "currencyCode": "KRW",
+    "currencySymbol": "₩",
+    "verificationFee": "₩1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "MY",
+    "country": "Malaysia",
+    "currencyCode": "MYR",
+    "currencySymbol": "RM",
+    "verificationFee": "RM1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "TH",
+    "country": "Thailand",
+    "currencyCode": "THB",
+    "currencySymbol": "฿",
+    "verificationFee": "฿1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "ID",
+    "country": "Indonesia",
+    "currencyCode": "IDR",
+    "currencySymbol": "Rp",
+    "verificationFee": "Rp1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  },
+  {
+    "countryCode": "PH",
+    "country": "Philippines",
+    "currencyCode": "PHP",
+    "currencySymbol": "₱",
+    "verificationFee": "₱1",
+    "verificationFeeAmount": 1,
+    "verificationFeeFrequency": "one-time",
+    "tariffs": {
+      "Basic": [
+        {
+          "duration": "15 min",
+          "amount": 99
+        },
+        {
+          "duration": "30 min",
+          "amount": 199
+        },
+        {
+          "duration": "1 hour",
+          "amount": 299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 499
+        },
+        {
+          "duration": "3 hours",
+          "amount": 699
+        }
+      ],
+      "Standard": [
+        {
+          "duration": "15 min",
+          "amount": 299
+        },
+        {
+          "duration": "30 min",
+          "amount": 499
+        },
+        {
+          "duration": "1 hour",
+          "amount": 699
+        },
+        {
+          "duration": "2 hours",
+          "amount": 999
+        },
+        {
+          "duration": "3 hours",
+          "amount": 1299
+        }
+      ],
+      "Premium": [
+        {
+          "duration": "15 min",
+          "amount": 599
+        },
+        {
+          "duration": "30 min",
+          "amount": 999
+        },
+        {
+          "duration": "1 hour",
+          "amount": 1299
+        },
+        {
+          "duration": "2 hours",
+          "amount": 1799
+        },
+        {
+          "duration": "3 hours",
+          "amount": 2299
+        }
+      ]
+    }
+  }
+]
