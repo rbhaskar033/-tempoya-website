@@ -1,18 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 352" role="img" aria-labelledby="title desc">
 <title id="title">TEMPOYA — Your Time. Your Choice.</title>
-<desc id="desc">Approved final Concept 3: a letter T with clock hands and an infinity connection symbol, in coral pink and sunset orange.</desc>
+<desc id="desc">Final approved Concept 3 logo: navy T with coral clock hands, pink-orange circular arc, two people dots and an infinity connection symbol, TEMPOYA wordmark and tagline.</desc>
 <defs>
- <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff4d8d"/><stop offset="1" stop-color="#ff7a45"/></linearGradient>
- <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff3f86"/><stop offset="1" stop-color="#ff7a45"/></linearGradient>
+ <linearGradient id="coral" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#ff3185"/><stop offset="1" stop-color="#ff7547"/></linearGradient>
+ <linearGradient id="infinity" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#ff3487"/><stop offset="1" stop-color="#ff7049"/></linearGradient>
 </defs>
-<path d="M118 206 A138 138 0 1 1 394 206" fill="none" stroke="url(#ring)" stroke-width="22" stroke-linecap="round"/>
-<path d="M178 126 Q178 111 194 111 H318 Q334 111 334 127 V151 H278 V300 Q278 319 256 319 Q234 319 234 300 V151 H178Z" fill="#07132f"/>
-<path d="M332 192 L332 150 M332 192 L359 213" fill="none" stroke="#ff754d" stroke-width="8" stroke-linecap="round"/>
-<circle cx="332" cy="192" r="10" fill="#ff754d"/>
-<circle cx="182" cy="321" r="26" fill="#ff3f86"/>
-<circle cx="330" cy="321" r="26" fill="#ff754d"/>
-<path d="M118 373 C151 328 195 331 225 367 C244 389 268 389 287 367 C318 331 362 328 394 373 C363 425 324 428 288 399 C267 382 245 382 224 399 C188 428 149 425 118 373Z" fill="none" stroke="url(#mark)" stroke-width="23" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="256" y="463" text-anchor="middle" font-family="Arial,sans-serif" font-size="62" font-weight="700" letter-spacing="5" fill="#07132f">TEMPOYA</text>
-<path d="M80 480 H170 M342 480 H432" stroke="url(#ring)" stroke-width="3"/>
-<text x="256" y="489" text-anchor="middle" font-family="Arial,sans-serif" font-size="22" fill="#4b4b55">Your Time. Your Choice.</text>
+<rect width="440" height="352" fill="#fff"/>
+<!-- circular time arc -->
+<path d="M110 169 A101 101 0 1 1 330 169" fill="none" stroke="url(#coral)" stroke-width="11" stroke-linecap="round"/>
+<!-- T monogram -->
+<path d="M162 62 Q162 50 174 50 H258 Q270 50 270 62 V72 Q270 84 258 84 H226 V165 Q226 178 213 178 Q200 178 200 165 V84 H174 Q162 84 162 72Z" fill="#07152f"/>
+<!-- clock hands -->
+<path d="M265 96 V126 L284 138" fill="none" stroke="#ff7049" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="265" cy="126" r="4.5" fill="#ff7049"/>
+<!-- people -->
+<circle cx="166" cy="180" r="12.5" fill="#ff3c83"/>
+<circle cx="274" cy="180" r="12.5" fill="#ff7049"/>
+<!-- infinity connection -->
+<path d="M145 218 C160 197 183 198 211 218 C224 228 235 228 248 218 C276 198 299 197 314 218 C299 242 276 244 248 224 C235 214 224 214 211 224 C183 244 160 242 145 218Z" fill="none" stroke="url(#infinity)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- wordmark -->
+<g font-family="Arial, Helvetica, sans-serif" font-size="65" font-weight="500" letter-spacing="4" text-anchor="middle">
+ <text x="220" y="302" fill="#07152f">TEMP<tspan fill="#ff3c83">O</tspan>YA</text>
+</g>
+<!-- tagline and rules -->
+<path d="M17 328 H65" stroke="#ff3c83" stroke-width="2"/>
+<path d="M375 328 H423" stroke="#ff7049" stroke-width="2"/>
+<text x="220" y="335" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="20" fill="#55545a">Your Time. Your Choice.</text>
 </svg>
