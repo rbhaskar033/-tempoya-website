@@ -26,8 +26,8 @@
     <a class="welcome-logo-link" href="#home" aria-label="TEMPOYA home"><img class="welcome-logo" src="/assets/tempoya-approved-handshake.jpg?v=20261124-2" alt="TEMPOYA — Your Time. Your Choice."></a>
     <h1>Real People<br>Real Connections<br>In Real Life.</h1>
     <div class="welcome-actions">
-      <a class="welcome-button welcome-primary" href="#account">Get Started <span aria-hidden="true">→</span></a>
-      <a class="welcome-button welcome-secondary" href="#account">Sign In</a>
+      <a class="welcome-button welcome-primary" href="#account" data-auth-intent="start">Get Started <span aria-hidden="true">→</span></a>
+      <a class="welcome-button welcome-secondary" href="#account" data-auth-intent="signin">Sign In</a>
     </div>
     <p class="welcome-footnote">18+ Adults Only&nbsp; • &nbsp;Consent Required</p>
   </div>
@@ -189,7 +189,7 @@
 </section>
 <section class="section" id="account">
   <p class="eyebrow">ACCOUNT ACCESS</p>
-  <h2>Phone Number Sign-In</h2>
+  <h2 id="tempoya-account-title">Phone Number Sign-In</h2>
   <p>Sign in with your phone number using a real Firebase SMS verification code. No prototype or fixed test code is used by this sign-in form. SMS delivery requires Firebase Phone Authentication, authorized domains, SMS region settings and any required billing/quota setup to be enabled.</p>
   <form id="tempoya-phone-form" style="max-width:520px;display:grid;gap:1rem;margin-top:1.5rem">
     <label for="tempoya-country-dial">Country / Calling code (22 launch countries)
@@ -266,5 +266,23 @@
 <script>
 // Legacy verification-fee selector removed: the active country/currency preview is above.
 </script>
+
+<script>
+(function () {
+  var title = document.getElementById('tempoya-account-title');
+  var phone = document.getElementById('tempoya-phone');
+  document.querySelectorAll('[data-auth-intent]').forEach(function (link) {
+    link.addEventListener('click', function () {
+      if (title) title.textContent = link.dataset.authIntent === 'start'
+        ? 'Get Started — Create Your TEMPOYA Account'
+        : 'Sign In to TEMPOYA';
+      window.setTimeout(function () {
+        if (phone) phone.focus({ preventScroll: true });
+      }, 450);
+    });
+  });
+})();
+</script>
+
 </body>
 </html>
