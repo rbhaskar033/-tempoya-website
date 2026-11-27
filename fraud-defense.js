@@ -1,7 +1,6 @@
 // Google Cloud Fraud Defense (reCAPTCHA Enterprise) runs in an isolated same-origin
 // frame so it cannot accidentally reuse Firebase App Check's different reCAPTCHA key.
 const pendingRequests = new Map();
-let frameElement = null;
 let frameReadyPromise = null;
 let nextRequestId = 0;
 
@@ -13,21 +12,35 @@ function getFraudDefenseFrame() {
     frame.setAttribute("aria-hidden", "true");
     frame.tabIndex = -1;
     frame.style.cssText = "position:absolute;width:1px;height:1px;border:0;left:-10000px;top:-10000px";
-    frameElement = frame;
-
+    let settled = false;
+    const cleanup = () => {
+      window.removeEventListener("message", onMessage);
+      clearTimeout(initTimeout);
+    };
+    const fail = error => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      frameReadyPromise = null;
+      frame.remove();
+      reject(error instanceof Error ? error : new Error(String(error)));
+    };
     const onMessage = event => {
       if (event.origin !== window.location.origin || event.source !== frame.contentWindow) return;
       const data = event.data || {};
       if (data.type === "tempoya-fraud-frame-ready") {
-        window.removeEventListener("message", onMessage);
-        resolve(frame);
-      } else if (data.type === "tempoya-fraud-frame-error") {
-        window.removeEventListener("message", onMessage);
-        frameReadyPromise = null;
-        frameElement = null;
-        frame.remove();
-        reject(new Error(data.message || "Google Fraud Defense failed to initialize."));
-      } else if (data.type === "tempoya-fraud-token-result" && typeof data.requestId === "string") {
+        if (!settled) {
+          settled = true;
+          clearTimeout(initTimeout);
+          resolve(frame);
+        }
+        return;
+      }
+      if (data.type === "tempoya-fraud-frame-error") {
+        fail(new Error(data.message || "Google Fraud Defense failed to initialize."));
+        return;
+      }
+      if (data.type === "tempoya-fraud-token-result" && typeof data.requestId === "string") {
         const pending = pendingRequests.get(data.requestId);
         if (!pending) return;
         pendingRequests.delete(data.requestId);
@@ -37,23 +50,10 @@ function getFraudDefenseFrame() {
       }
     };
     window.addEventListener("message", onMessage);
-    frame.onerror = () => {
-      window.removeEventListener("message", onMessage);
-      frameReadyPromise = null;
-      frameElement = null;
-      reject(new Error("TEMPOYA Fraud Defense frame could not be loaded."));
-    };
+    frame.onerror = () => fail(new Error("TEMPOYA Fraud Defense frame could not be loaded."));
+    const initTimeout = setTimeout(() => fail(new Error("Google Fraud Defense initialization timed out.")), 20000);
     frame.src = "/fraud-defense-frame.html";
     document.body.appendChild(frame);
-    setTimeout(() => {
-      if (frameReadyPromise) {
-        window.removeEventListener("message", onMessage);
-        frameReadyPromise = null;
-        frameElement = null;
-        frame.remove();
-        reject(new Error("Google Fraud Defense initialization timed out."));
-      }
-    }, 20000);
   });
   return frameReadyPromise;
 }
