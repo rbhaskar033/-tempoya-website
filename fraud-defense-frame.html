@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TEMPOYA Fraud Defense</title></head>
+<body>
+<script>
+(function () {
+  "use strict";
+  const siteKey = "6LfdwhluAAAAAC0hcyt2TgXk5or3JNDrEQxATrMH";
+  let ready = false;
+  function send(message) {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage(message, window.location.origin);
+    }
+  }
+  window.addEventListener("message", async function (event) {
+    if (event.source !== window.parent || event.origin !== window.location.origin) return;
+    const data = event.data || {};
+    if (data.type !== "tempoya-fraud-token-request" || !ready ||
+        typeof data.requestId !== "string" ||
+        typeof data.action !== "string" ||
+        !/^[A-Za-z0-9_]{2,64}$/.test(data.action)) return;
+    try {
+      const token = await window.grecaptcha.enterprise.execute(siteKey, { action: data.action });
+      if (typeof token !== "string" || token.length < 20) throw new Error("Google Fraud Defense did not return a valid security token.");
+      send({ type: "tempoya-fraud-token-result", requestId: data.requestId, token: token });
+    } catch (error) {
+      send({ type: "tempoya-fraud-token-result", requestId: data.requestId, error: error.message || "Fraud Defense token generation failed." });
+    }
+  });
+  const script = document.createElement("script");
+  script.src = "https://www.google.com/recaptcha/enterprise.js?render=" + encodeURIComponent(siteKey);
+  script.async = true;
+  script.defer = true;
+  script.onload = function () {
+    if (!window.grecaptcha || !window.grecaptcha.enterprise) {
+      send({ type: "tempoya-fraud-frame-error", message: "Google Fraud Defense script did not initialize." });
+      return;
+    }
+    window.grecaptcha.enterprise.ready(function () {
+      ready = true;
+      send({ type: "tempoya-fraud-frame-ready" });
+    });
+  };
+  script.onerror = function () {
+    send({ type: "tempoya-fraud-frame-error", message: "Google Fraud Defense script could not load. Check the network and allowed website domain." });
+  };
+  document.head.appendChild(script);
+})();
+</script>
+</body>
+</html>
